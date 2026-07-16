@@ -10,4 +10,7 @@ import normal_mode_sampling_step  # noqa: F401
 def test_construction():
     """Just create an object and test its type."""
     result = normal_mode_sampling_step.NormalModeSampling()
-    assert str(type(result)) == "<class 'normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling'>"
+    assert (
+        str(type(result))
+        == "<class 'normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling'>"
+    )

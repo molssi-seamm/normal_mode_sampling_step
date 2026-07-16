@@ -2,14 +2,15 @@
 
 """
 normal_mode_sampling_step
-A SEAMM plug-in for Wigner/thermal normal-mode sampling of the Hessian to generate displaced structures (e.g. for MLFF training sets)
+A SEAMM plug-in for Wigner/thermal normal-mode sampling of the Hessian, to
+generate displaced structures (e.g. for MLFF training sets).
 """
 
 # Bring up the classes so that they appear to be directly in
 # the normal_mode_sampling_step package.
 
 from .normal_mode_sampling import NormalModeSampling  # noqa: F401, E501
-from .normal_mode_sampling_parameters import NormalModeSamplingParameters  # noqa: F401, E501
+from .normal_mode_sampling_parameters import NormalModeSamplingParameters  # noqa: F401
 from .normal_mode_sampling_step import NormalModeSamplingStep  # noqa: F401, E501
 from .tk_normal_mode_sampling import TkNormalModeSampling  # noqa: F401, E501
 

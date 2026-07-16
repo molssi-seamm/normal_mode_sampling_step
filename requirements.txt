@@ -1,3 +1,5 @@
 seamm
+seamm-mdi
 seamm-util
 seamm-widgets
+numpy

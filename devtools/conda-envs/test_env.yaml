@@ -10,6 +10,7 @@ dependencies:
 
   # SEAMM
   - seamm
+  - numpy
 
   # Testing
   - black
@@ -24,6 +25,8 @@ dependencies:
 
   # Pip-only installs
   - pip:
+    # SEAMM
+    - seamm-mdi
     # Documentation
     - sphinx-copybutton
     - sphinxnotes-strike

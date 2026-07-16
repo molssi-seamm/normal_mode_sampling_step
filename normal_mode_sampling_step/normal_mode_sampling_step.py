@@ -32,8 +32,11 @@ class NormalModeSamplingStep(object):
     """
 
     my_description = {
-        "description": "An interface for Normal Mode Sampling",
-        "group": "Simulations",
+        "description": (
+            "Sample the normal-mode space of a molecule from its Hessian "
+            "(Wigner/thermal) to generate displaced structures"
+        ),
+        "group": "Building",
         "name": "Normal Mode Sampling",
     }
 
@@ -63,7 +66,9 @@ class NormalModeSamplingStep(object):
         NormalModeSampling
         """
 
-        return normal_mode_sampling_step.NormalModeSampling(flowchart=flowchart, **kwargs)
+        return normal_mode_sampling_step.NormalModeSampling(
+            flowchart=flowchart, **kwargs
+        )
 
     def create_tk_node(self, canvas=None, **kwargs):
         """Create and return the graphical Tk node object.

@@ -1,1 +1,4 @@
 Property,Type,Units,Description,URL
+zero point energy#NormalModeSampling#{model},float,kJ/mol,"The {model} harmonic zero-point vibrational energy, ZPE.",https://en.wikipedia.org/wiki/Zero-point_energy
+harmonic energy#NormalModeSampling#sampling,float,kJ/mol,"The predicted harmonic energy of this sampled structure above the reference geometry.",
+normal mode displacement#NormalModeSampling#sampling,json,Å*u^1/2,"The normal-coordinate displacement per sampled mode (mass-weighted) that generated this structure.",

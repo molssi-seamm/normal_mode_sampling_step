@@ -4,142 +4,88 @@
 
 metadata = {}
 
-"""Description of the computational models for NormalModeSampling.
+"""Properties that Normal Mode Sampling produces.
 
-Hamiltonians, approximations, and basis set or parameterizations,
-only if appropriate for this code. For example::
-
-    metadata["computational models"] = {
-        "Hartree-Fock": {
-            "models": {
-                "PM7": {
-                    "parameterizations": {
-                        "PM7": {
-                            "elements": "1-60,62-83",
-                            "periodic": True,
-                            "reactions": True,
-                            "optimization": True,
-                            "code": "mopac",
-                        },
-                        "PM7-TS": {
-                            "elements": "1-60,62-83",
-                            "periodic": True,
-                            "reactions": True,
-                            "optimization": False,
-                            "code": "mopac",
-                        },
-                    },
-                },
-            },
-        },
-    }
-"""
-# metadata["computational models"] = {
-# }
-
-"""Description of the NormalModeSampling keywords.
-
-(Only needed if this code uses keywords)
-
-Fields
-------
-description : str
-    A human readable description of the keyword.
-takes values : int (optional)
-    Number of values the keyword takes. If missing the keyword takes no values.
-default : str (optional)
-    The default value(s) if the keyword takes values.
-format : str (optional)
-    How the keyword is formatted in the MOPAC input.
-
-For example::
-    metadata["keywords"] = {
-        "0SCF": {
-            "description": "Read in data, then stop",
-        },
-        "ALT_A": {
-            "description": "In PDB files with alternative atoms, select atoms A",
-            "takes values": 1,
-            "default": "A",
-            "format": "{}={}",
-        },
-    }
-"""
-# metadata["keywords"] = {
-# }
-
-"""Properties that NormalModeSampling produces.
 `metadata["results"]` describes the results that this step can produce. It is a
-dictionary where the keys are the internal names of the results within this step, and
-the values are a dictionary describing the result. For example::
+dictionary where the keys are the internal names of the results within this step,
+and the values are a dictionary describing the result. See the SEAMM developer
+documentation (or e.g. the Thermochemistry step) for the full field reference.
 
-    metadata["results"] = {
-        "total_energy": {
-            "calculation": [
-                "energy",
-                "optimization",
-            ],
-            "description": "The total energy",
-            "dimensionality": "scalar",
-            "methods": [
-                "ccsd",
-                "ccsd(t)",
-                "dft",
-                "hf",
-            ],
-            "property": "total energy#Psi4#{model}",
-            "type": "float",
-            "units": "E_h",
-        },
-    }
-
-Fields
-______
-
-calculation : [str]
-    Optional metadata describing what subtype of the step produces this result.
-    The subtypes are completely arbitrary, but often they are types of calculations
-    which is why this is name `calculation`. To use this, the step or a substep
-    define `self._calculation` as a value. That value is used to select only the
-    results with that value in this field.
-
-description : str
-    A human-readable description of the result.
-
-dimensionality : str
-    The dimensions of the data. The value can be "scalar" or an array definition
-    of the form "[dim1, dim2,...]". Symmetric tringular matrices are denoted
-    "triangular[n,n]". The dimensions can be integers, other scalar
-    results, or standard parameters such as `n_atoms`. For example, '[3]',
-    [3, n_atoms], or "triangular[n_aos, n_aos]".
-
-methods : str
-    Optional metadata like the `calculation` data. `methods` provides a second
-    level of filtering, often used for the Hamiltionian for *ab initio* calculations
-    where some properties may or may not be calculated depending on the type of
-    theory.
-
-property : str
-    An optional definition of the property for storing this result. Must be one of
-    the standard properties defined either in SEAMM or in this steps property
-    metadata in `data/properties.csv`.
-
-type : str
-    The type of the data: string, integer, or float.
-
-units : str
-    Optional units for the result. If present, the value should be in these units.
+Normal Mode Sampling does not carry a computational model or keywords of its own
+-- the energy/Hessian come from the Model Chemistry published upstream -- so only
+``results`` is populated here. The storable scalar (the zero-point energy) is
+defined in ``data/properties.csv``; ``{model}`` is filled from the model
+chemistry at run time. The frequencies are exposed as a retrievable result (to a
+variable or table) but not stored as a per-configuration property.
 """
-# metadata["results"] = {
-#     "total_energy": {
-#         "calculation": [
-#             "energy",
-#             "optimization",
-#         ],
-#         "description": "The total energy",
-#         "dimensionality": "scalar",
-#         "property": "total energy#NormalModeSampling#{model}",
-#         "type": "float",
-#         "units": "E_h",
-#     },
-# }
+
+metadata["results"] = {
+    "number of samples": {
+        "description": "Number of sampled configurations generated",
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "number of vibrational modes": {
+        "description": "Number of real vibrational modes available to sample",
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "number of sampled modes": {
+        "description": "Number of modes actually displaced along",
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "number of imaginary modes": {
+        "description": (
+            "Number of imaginary-frequency modes found (0 for a minimum, 1 for a "
+            "transition state); these are reported but not sampled"
+        ),
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "number of low modes": {
+        "description": (
+            "Number of translational, rotational, and near-zero modes projected "
+            "out before sampling"
+        ),
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "frequencies": {
+        "description": "The vibrational frequencies used for sampling",
+        "dimensionality": "[n_vibrational_modes]",
+        "type": "float",
+        "units": "cm^-1",
+    },
+    "zero point energy": {
+        "description": "The harmonic zero-point vibrational energy",
+        "dimensionality": "scalar",
+        "property": "zero point energy#NormalModeSampling#{model}",
+        "type": "float",
+        "units": "kJ/mol",
+        "format": ".3f",
+    },
+    "mean harmonic energy": {
+        "description": (
+            "Mean harmonic energy of the sampled ensemble, above the reference"
+        ),
+        "dimensionality": "scalar",
+        "type": "float",
+        "units": "kJ/mol",
+        "format": ".3f",
+    },
+    "maximum harmonic energy": {
+        "description": (
+            "Largest harmonic energy above the reference among the accepted " "samples"
+        ),
+        "dimensionality": "scalar",
+        "type": "float",
+        "units": "kJ/mol",
+        "format": ".3f",
+    },
+    "number of rejected samples": {
+        "description": ("Number of draws rejected by the energy ceiling and redrawn"),
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+}
