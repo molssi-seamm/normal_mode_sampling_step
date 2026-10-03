@@ -1,6 +1,14 @@
 =======
 History
 =======
+2026.10.3 -- Bugfix: the Hessian used the program's method name and default basis
+    * The MDI engine for the Hessian was launched with the model chemistry's
+      method name alone, so ORCA ran def2-SVP whatever basis was chosen, and a
+      functional whose name the Model Chemistry step had to alter was not
+      recognized. It now gets the program's own keyword and the chosen basis
+      (with model_chemistry_step 2026.10.3).
+    * The shared CI now runs on uv: ``devtools/conda-envs/test_env.yaml`` is
+      removed, so ``requirements.txt`` is the one dependency list.
 
 2026.7.15 -- Initial release
     * Generates an ensemble of displaced structures by normal-mode sampling of a
