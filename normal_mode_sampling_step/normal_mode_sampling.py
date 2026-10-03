@@ -529,11 +529,16 @@ class NormalModeSampling(seamm.Node):
 
         mc = self.get_variable("_model_chemistry")
         options = mc["options"]
-        if not options.get("mdi_capable", False):
+        from seamm_exec import Evaluator
+
+        try:
+            evaluator = Evaluator(self, mc, properties=("energy", "gradients"))
+        except ValueError:
             raise ValueError(
-                f"The model chemistry '{mc['level']}' cannot be driven via MDI, "
-                "which the Hessian (analytic or finite-difference of forces) "
-                "requires. Choose an MDI-capable model chemistry."
+                f"The model chemistry '{mc['level']}' can be evaluated neither over "
+                "MDI nor as separate calculations, so it cannot give the Hessian. "
+                "Choose a model chemistry with an MDI engine or with tasks (e.g. "
+                "MOPAC, xTB or ORCA)."
             )
 
         step = self.flowchart.plugin_manager.get(mc["step"])
@@ -566,16 +571,65 @@ class NormalModeSampling(seamm.Node):
         )
 
         n = len(elements)
-        with MDIEngine(build_argv, elements, name="SEAMM", logger=self.logger) as eng:
-            eng.set_coordinates(coords_ang, units="Å")
-            # The engine advertises <HESSIAN only when it has a genuine analytic
-            # Hessian for this method, so supports() is the truthful capability
-            # check: use the analytic Hessian when offered, else finite-difference
-            # the forces over the warm engine.
-            if eng.supports("<HESSIAN"):
-                # Analytic Hessian: (3N, 3N) in hartree/bohr^2.
-                return np.asarray(eng.hessian(), dtype=float).reshape(3 * n, 3 * n)
-            return self._fd_hessian(eng, coords_ang, n)
+        if options.get("mdi_capable", False):
+            with MDIEngine(
+                build_argv, elements, name="SEAMM", logger=self.logger
+            ) as eng:
+                eng.set_coordinates(coords_ang, units="Å")
+                # The engine advertises <HESSIAN only when it has a genuine
+                # analytic Hessian for this method, so supports() is the truthful
+                # capability check: use the analytic Hessian when offered.
+                if eng.supports("<HESSIAN"):
+                    # Analytic Hessian: (3N, 3N) in hartree/bohr^2.
+                    return np.asarray(eng.hessian(), dtype=float).reshape(3 * n, 3 * n)
+                # Otherwise finite-difference the forces: over the warm engine,
+                # unless the evaluator runs this model chemistry as tasks.
+                if evaluator.path != "batch":
+                    return self._fd_hessian(eng, coords_ang, n)
+        return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+
+    def _fd_hessian_tasks(self, evaluator, configuration, coords_ang, delta_bohr=0.01):
+        """Central-difference Hessian (hartree/bohr^2) from the gradients of the
+        6N displaced structures, computed together as tasks (concurrently, or on
+        the job's queue; a rerun keeps the finished ones)."""
+        from seamm_exec import Geometry
+
+        elements = list(configuration.atoms.atomic_numbers)
+        x0 = np.asarray(coords_ang, dtype=float).reshape(-1)
+        delta = Q_(delta_bohr, "bohr").m_as("Å")
+        ndof = x0.size
+        prefix = f"c{getattr(configuration, 'id', 0)}-fd"
+        for j in range(ndof):
+            for sign, tag in ((1.0, "p"), (-1.0, "m")):
+                x = x0.copy()
+                x[j] += sign * delta
+                evaluator.submit(
+                    Geometry(
+                        elements,
+                        x.reshape(-1, 3),
+                        configuration.charge,
+                        configuration.spin_multiplicity,
+                    ),
+                    key=f"{prefix}{j:04d}{tag}",
+                )
+        gradients = {}
+        for result in evaluator.results():
+            if not result.ok:
+                raise RuntimeError(
+                    f"A displaced structure for the Hessian failed ({result.key}): "
+                    f"{result.reason}"
+                )
+            gradients[result.key] = (
+                Q_(np.asarray(result.gradients, dtype=float), "kJ/mol/Å")
+                .m_as("hartree/bohr")
+                .reshape(-1)
+            )
+        H = np.zeros((ndof, ndof))
+        for j in range(ndof):
+            gp = gradients[f"{prefix}{j:04d}p"]
+            gm = gradients[f"{prefix}{j:04d}m"]
+            H[:, j] = (gp - gm) / (2.0 * delta_bohr)
+        return 0.5 * (H + H.T)
 
     def _fd_hessian(self, engine, coords_ang, n_atoms, delta_bohr=0.01):
         """Central-difference Hessian (hartree/bohr^2) from MDI forces."""

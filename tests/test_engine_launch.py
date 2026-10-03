@@ -85,3 +85,46 @@ def test_hessian_engine_gets_the_engine_keyword_and_users_basis(monkeypatch):
     mc["options"] = {"mdi_capable": True, "mdi_method_arg": "PM6"}
     nms.NormalModeSampling._hessian(me, configuration)
     assert step.kwargs["method"] == "PM6" and "basis" not in step.kwargs
+
+
+def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
+    """The task-based finite difference assembles the Hessian correctly: for
+    E = 1/2 x.K.x (x in bohr) the gradients are K.x, so the FD Hessian is K."""
+    from seamm_exec import EvaluatorResult
+    from seamm_util import Q_
+
+    rng = np.random.default_rng(3)
+    A = rng.normal(size=(6, 6))
+    K = A @ A.T  # hartree/bohr^2
+
+    class FakeEvaluator:
+        def __init__(self):
+            self.submitted = {}
+
+        def submit(self, geometry, key):
+            self.submitted[key] = geometry
+            return key
+
+        def results(self):
+            for key, geometry in self.submitted.items():
+                x = (
+                    Q_(geometry.atoms.get_coordinates(as_array=True), "Å")
+                    .m_as("bohr")
+                    .reshape(-1)
+                )
+                g = Q_(K @ x, "hartree/bohr").m_as("kJ/mol/Å").reshape(-1, 3)
+                yield EvaluatorResult(key=key, ok=True, energy=0.0, gradients=g)
+
+    configuration = types.SimpleNamespace(
+        id=7,
+        charge=0,
+        spin_multiplicity=1,
+        atoms=types.SimpleNamespace(atomic_numbers=[1, 1]),
+    )
+    me = types.SimpleNamespace()
+    evaluator = FakeEvaluator()
+    H = nms.NormalModeSampling._fd_hessian_tasks(
+        me, evaluator, configuration, np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.74]])
+    )
+    assert len(evaluator.submitted) == 12  # 6N displacements, N = 2
+    assert np.allclose(H, K, atol=1e-8)
