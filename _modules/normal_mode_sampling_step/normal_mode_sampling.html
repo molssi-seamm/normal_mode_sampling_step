@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.10.3 documentation</title>
+    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.10.3.1 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../../_static/documentation_options.js?v=0667127d"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.3" />
+  <meta name="docsearch:version" content="2026.10.3.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -523,7 +523,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">normal_mode_sampling_step</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">molsystem</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seamm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">seamm_mdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">MDIEngine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">ureg</span><span class="p">,</span> <span class="n">Q_</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seamm_util.printing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">printing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_util.printing</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormattedText</span> <span class="k">as</span> <span class="n">__</span>
@@ -1038,11 +1037,16 @@
 
         <span class="n">mc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">"_model_chemistry"</span><span class="p">)</span>
         <span class="n">options</span> <span class="o">=</span> <span class="n">mc</span><span class="p">[</span><span class="s2">"options"</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_capable"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Evaluator</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">evaluator</span> <span class="o">=</span> <span class="n">Evaluator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mc</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">(</span><span class="s2">"energy"</span><span class="p">,</span> <span class="s2">"gradients"</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"The model chemistry '</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="si">}</span><span class="s2">' cannot be driven via MDI, "</span>
-                <span class="s2">"which the Hessian (analytic or finite-difference of forces) "</span>
-                <span class="s2">"requires. Choose an MDI-capable model chemistry."</span>
+                <span class="sa">f</span><span class="s2">"The model chemistry '</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="si">}</span><span class="s2">' can be evaluated neither over "</span>
+                <span class="s2">"MDI nor as separate calculations, so it cannot give the Hessian. "</span>
+                <span class="s2">"Choose a model chemistry with an MDI engine or with tasks (e.g. "</span>
+                <span class="s2">"MOPAC, xTB or ORCA)."</span>
             <span class="p">)</span>
 
         <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flowchart</span><span class="o">.</span><span class="n">plugin_manager</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mc</span><span class="p">[</span><span class="s2">"step"</span><span class="p">])</span>
@@ -1075,16 +1079,107 @@
         <span class="p">)</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="n">has_tasks</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">evaluator</span><span class="o">.</span><span class="n">provider</span><span class="p">,</span> <span class="s2">"get_task"</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">target</span>
+        <span class="n">on_queue</span> <span class="o">=</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"tasks"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="s2">"queue"</span><span class="p">,</span>
+            <span class="s2">"taskserver"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># The route (design, 2026-10-03):</span>
+        <span class="c1"># - on a queue target the target wins: the finite difference as tasks</span>
+        <span class="c1">#   on the cluster, with no local engine started even to ask;</span>
+        <span class="c1"># - otherwise the analytic Hessian over MDI when the program has one</span>
+        <span class="c1">#   (the 'analytic_hessian' option if it says, else the engine's</span>
+        <span class="c1">#   &lt;HESSIAN), else the finite difference: as tasks if the evaluator</span>
+        <span class="c1">#   chose them, else over the warm engine;</span>
+        <span class="c1"># - with no MDI engine, the finite difference as tasks.</span>
+        <span class="k">if</span> <span class="n">on_queue</span> <span class="ow">and</span> <span class="n">has_tasks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian_tasks</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_capable"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian_tasks</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"analytic_hessian"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">"batch"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian_tasks</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">has_tasks</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_code_is_here</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span>
+                <span class="n">__</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not installed on this machine, so the "</span>
+                    <span class="s2">"Hessian is computed by finite differences, as separate "</span>
+                    <span class="s2">"calculations where the job runs its tasks."</span><span class="p">,</span>
+                    <span class="n">indent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian_tasks</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_mdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">MDIEngine</span>  <span class="c1"># only for the MDI routes</span>
+
         <span class="k">with</span> <span class="n">MDIEngine</span><span class="p">(</span><span class="n">build_argv</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SEAMM"</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span> <span class="k">as</span> <span class="n">eng</span><span class="p">:</span>
             <span class="n">eng</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"Å"</span><span class="p">)</span>
             <span class="c1"># The engine advertises &lt;HESSIAN only when it has a genuine analytic</span>
             <span class="c1"># Hessian for this method, so supports() is the truthful capability</span>
-            <span class="c1"># check: use the analytic Hessian when offered, else finite-difference</span>
-            <span class="c1"># the forces over the warm engine.</span>
+            <span class="c1"># check: use the analytic Hessian when offered.</span>
             <span class="k">if</span> <span class="n">eng</span><span class="o">.</span><span class="n">supports</span><span class="p">(</span><span class="s2">"&lt;HESSIAN"</span><span class="p">):</span>
                 <span class="c1"># Analytic Hessian: (3N, 3N) in hartree/bohr^2.</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eng</span><span class="o">.</span><span class="n">hessian</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian</span><span class="p">(</span><span class="n">eng</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="c1"># Otherwise finite-difference the forces: over the warm engine,</span>
+            <span class="c1"># unless the evaluator runs this model chemistry as tasks.</span>
+            <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">path</span> <span class="o">!=</span> <span class="s2">"batch"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian</span><span class="p">(</span><span class="n">eng</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian_tasks</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_code_is_here</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether the program is installed where this step runs: its</span>
+<span class="sd">        ``get_executor_config`` finds it (ORCA's raises when it cannot)."""</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s2">"get_executor_config"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">check</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">check</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flowchart</span><span class="o">.</span><span class="n">executor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_options</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fd_hessian_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">delta_bohr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Central-difference Hessian (hartree/bohr^2) from the gradients of the</span>
+<span class="sd">        6N displaced structures, computed together as tasks (concurrently, or on</span>
+<span class="sd">        the job's queue; a rerun keeps the finished ones)."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Geometry</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">)</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="n">delta_bohr</span><span class="p">,</span> <span class="s2">"bohr"</span><span class="p">)</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"Å"</span><span class="p">)</span>
+        <span class="n">ndof</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"c</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span><span class="w"> </span><span class="s1">'id'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">-fd"</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndof</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sign</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">)):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">delta</span>
+                <span class="n">evaluator</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+                    <span class="n">Geometry</span><span class="p">(</span>
+                        <span class="n">elements</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                        <span class="n">configuration</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span>
+                        <span class="n">configuration</span><span class="o">.</span><span class="n">spin_multiplicity</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">j</span><span class="si">:</span><span class="s2">04d</span><span class="si">}{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"A displaced structure for the Hessian failed (</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">): "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="n">gradients</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Q_</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">gradients</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="s2">"kJ/mol/Å"</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"hartree/bohr"</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndof</span><span class="p">,</span> <span class="n">ndof</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndof</span><span class="p">):</span>
+            <span class="n">gp</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">j</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">p"</span><span class="p">]</span>
+            <span class="n">gm</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">j</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">m"</span><span class="p">]</span>
+            <span class="n">H</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">gp</span> <span class="o">-</span> <span class="n">gm</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">delta_bohr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">H</span> <span class="o">+</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_fd_hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">delta_bohr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Central-difference Hessian (hartree/bohr^2) from MDI forces."""</span>

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM Normal Mode Sampling Plug-in 2026.10.3 documentation</title>
+    <title>User Guide &#8212; SEAMM Normal Mode Sampling Plug-in 2026.10.3.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../_static/documentation_options.js?v=0667127d"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="Getting Started" href="../getting_started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.3" />
+  <meta name="docsearch:version" content="2026.10.3.1" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -510,6 +510,30 @@
                   
   <section id="user-guide">
 <span id="id1"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+<section id="how-the-hessian-is-computed">
+<h2>How the Hessian is computed<a class="headerlink" href="#how-the-hessian-is-computed" title="Link to this heading">#</a></h2>
+<p>The normal modes come from the Hessian of the structure with the model chemistry chosen
+by a <em>Model Chemistry</em> step earlier in the flowchart. The step picks the best route the
+model chemistry offers:</p>
+<ul class="simple">
+<li><p><strong>On a cluster queue, finite differences there.</strong> When the job’s calculations go to
+a cluster queue and the program can run separate calculations (ORCA, MOPAC), the
+Hessian is the finite difference of the gradients from the 6N structures displaced by
+±0.01 bohr along each Cartesian coordinate, run as separate calculations batched on
+the cluster. Nothing is started on the job’s own machine,
+where the program may not be installed.</p></li>
+<li><p><strong>Otherwise analytic</strong>, when the program’s MDI engine provides second derivatives
+(ORCA for HF, most DFT functionals and MP2).</p></li>
+<li><p><strong>Otherwise finite differences here.</strong> For programs that run separate calculations
+(ORCA) the 6N calculations run concurrently on this machine; for programs with a
+resident engine (MOPAC, xTB, MLFFs) they are evaluated one after another over the
+warm MDI connection. If the program is not installed on this machine at all, the
+separate calculations are used, and the output says so.</p></li>
+</ul>
+<p>Separate calculations are kept in <code class="docutils literal notranslate"><span class="pre">tasks/</span></code> in the step’s directory, and a rerun of the
+job in the same directory reuses the finished ones.</p>
+<p>For HF/def2-SVP water the analytic and finite-difference Hessians agree to better than 1 cm⁻¹ in the frequencies.</p>
+</section>
 <section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -566,6 +590,7 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-hessian-is-computed">How the Hessian is computed</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
   </nav></div>
