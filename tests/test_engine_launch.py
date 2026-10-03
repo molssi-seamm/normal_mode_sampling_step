@@ -18,6 +18,9 @@ class _Engine:
         _Engine.argv = build_argv("localhost", 1234)
         self.n = len(elements)
 
+    def start(self):
+        return self
+
     def __enter__(self):
         return self
 
@@ -44,7 +47,9 @@ class _OrcaStep:
 
 
 def test_hessian_engine_gets_the_engine_keyword_and_users_basis(monkeypatch):
-    monkeypatch.setattr(nms, "MDIEngine", _Engine)
+    import seamm_mdi
+
+    monkeypatch.setattr(seamm_mdi, "MDIEngine", _Engine)
     step = _OrcaStep()
     mc = {
         "level": "ORCA:DFT@wB97X-D3/def2-TZVP",
@@ -128,3 +133,60 @@ def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
     )
     assert len(evaluator.submitted) == 12  # 6N displacements, N = 2
     assert np.allclose(H, K, atol=1e-8)
+
+
+def test_no_engine_falls_back_to_finite_differences_as_tasks(monkeypatch):
+    """The code is not installed where the job runs: no MDI engine, so the
+    Hessian comes from the finite difference as tasks."""
+    import seamm_mdi
+
+    class _NoEngine:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def start(self):
+            raise RuntimeError("MDI engine exited before connecting")
+
+    monkeypatch.setattr(seamm_mdi, "MDIEngine", _NoEngine)
+
+    class _Provider(_OrcaStep):
+        get_task = staticmethod(lambda *a, **k: None)
+        analyze_task = staticmethod(lambda *a, **k: None)
+
+    step = _Provider()
+    mc = {
+        "level": "ORCA:DFT@B3LYP/def2-SVP",
+        "method": "B3LYP",
+        "basis": "def2-SVP",
+        "step": "orca-step",
+        "options": {"mdi_capable": True, "mdi_method_arg": "B3LYP"},
+    }
+    me = types.SimpleNamespace(
+        variable_exists=lambda name: True,
+        get_variable=lambda name: mc,
+        global_options={},
+        logger=types.SimpleNamespace(warning=lambda *a, **k: None),
+        flowchart=types.SimpleNamespace(
+            executor="local",
+            plugin_manager=types.SimpleNamespace(get=lambda name: step),
+        ),
+    )
+    called = {}
+
+    def fd_tasks(evaluator, configuration, coords):
+        called["yes"] = True
+        return np.eye(3)
+
+    me._fd_hessian_tasks = fd_tasks
+    configuration = types.SimpleNamespace(
+        periodicity=0,
+        charge=0,
+        spin_multiplicity=1,
+        n_atoms=1,
+        atoms=types.SimpleNamespace(
+            atomic_numbers=[1],
+            get_coordinates=lambda fractionals, as_array: [[0.0, 0.0, 0.0]],
+        ),
+    )
+    H = nms.NormalModeSampling._hessian(me, configuration)
+    assert called == {"yes": True} and H.shape == (3, 3)

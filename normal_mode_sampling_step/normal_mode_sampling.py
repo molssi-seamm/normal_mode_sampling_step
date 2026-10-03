@@ -31,7 +31,6 @@ import numpy as np
 import normal_mode_sampling_step
 import molsystem
 import seamm
-from seamm_mdi import MDIEngine
 from seamm_util import ureg, Q_  # noqa: F401
 import seamm_util.printing as printing
 from seamm_util.printing import FormattedText as __
@@ -572,9 +571,22 @@ class NormalModeSampling(seamm.Node):
 
         n = len(elements)
         if options.get("mdi_capable", False):
-            with MDIEngine(
-                build_argv, elements, name="SEAMM", logger=self.logger
-            ) as eng:
+            from seamm_mdi import MDIEngine  # only for the MDI routes
+
+            try:
+                eng = MDIEngine(build_argv, elements, name="SEAMM", logger=self.logger)
+                eng.start()
+            except Exception as e:
+                # No engine here (e.g. the code is installed only on the job's
+                # cluster): the finite difference as tasks, if the program can.
+                if not hasattr(evaluator.provider, "get_task"):
+                    raise
+                self.logger.warning(
+                    f"Could not start the MDI engine ({e}); computing the Hessian "
+                    "by finite differences as separate calculations."
+                )
+                return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+            with eng:
                 eng.set_coordinates(coords_ang, units="Å")
                 # The engine advertises <HESSIAN only when it has a genuine
                 # analytic Hessian for this method, so supports() is the truthful
