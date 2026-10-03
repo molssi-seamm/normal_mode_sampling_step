@@ -537,17 +537,26 @@ class NormalModeSampling(seamm.Node):
             )
 
         step = self.flowchart.plugin_manager.get(mc["step"])
+        # The engine's real keyword (an ORCA functional's alias undone) and the
+        # user's basis, for programs that take one; MOPAC, xTB and MLFFs take
+        # a method alone.
+        method = options.get("mdi_method_arg") or mc["method"]
+        basis = options.get("mdi_basis_arg")
 
         def build_argv(hostname, port):
+            kwargs = {}
+            if basis is not None:
+                kwargs["basis"] = basis
             return step.get_mdi_engine_command(
                 self.flowchart.executor,
                 self.global_options,
-                method=mc["method"],
+                method=method,
                 port=port,
                 hostname=hostname,
                 charge=configuration.charge,
                 multiplicity=configuration.spin_multiplicity,
                 n_atoms=configuration.n_atoms,
+                **kwargs,
             )
 
         elements = list(configuration.atoms.atomic_numbers)
