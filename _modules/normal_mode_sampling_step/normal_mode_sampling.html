@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.7.15 documentation</title>
+    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.10.3 documentation</title>
   
   
   
@@ -26,8 +25,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -35,12 +34,12 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=cfb6c46a"></script>
+    <script src="../../_static/documentation_options.js?v=f64fa391"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -52,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.7.15" />
+  <meta name="docsearch:version" content="2026.10.3" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -100,7 +99,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -225,7 +224,7 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -236,15 +235,15 @@
         <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -281,7 +280,7 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -393,15 +392,15 @@
           <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -493,7 +492,7 @@
   <h1>Source code for normal_mode_sampling_step.normal_mode_sampling</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;Non-graphical part of the Normal Mode Sampling step in a SEAMM flowchart</span>
+<span class="sd">"""Non-graphical part of the Normal Mode Sampling step in a SEAMM flowchart</span>
 
 <span class="sd">The step draws an ensemble of displaced geometries by Wigner (or classical /</span>
 <span class="sd">ground-state) normal-mode sampling of the Hessian, and writes them as</span>
@@ -503,7 +502,7 @@
 <span class="sd">``_model_chemistry`` workspace variable), driven over MDI by ``seamm_mdi``:</span>
 
 <span class="sd">* if the engine advertises the custom ``&lt;HESSIAN`` command</span>
-<span class="sd">  (``MDIEngine.supports(&quot;&lt;HESSIAN&quot;)`` -- true only when it has a genuine analytic</span>
+<span class="sd">  (``MDIEngine.supports("&lt;HESSIAN")`` -- true only when it has a genuine analytic</span>
 <span class="sd">  Hessian for the method), the analytic Hessian is used directly;</span>
 <span class="sd">* otherwise the Hessian is built by central finite differences of the forces</span>
 <span class="sd">  (``&lt;FORCES``) over the *warm* engine -- cheap because the engine stays</span>
@@ -512,7 +511,7 @@
 <span class="sd">The physics helpers (``normal_mode_analysis``, ``sample_normal_modes``,</span>
 <span class="sd">``zero_point_energy``) are module-level and free of any flowchart state so they</span>
 <span class="sd">can be unit-tested directly.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -531,11 +530,11 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">printing</span><span class="o">.</span><span class="n">getPrinter</span><span class="p">()</span>
-<span class="n">printer</span> <span class="o">=</span> <span class="n">printing</span><span class="o">.</span><span class="n">getPrinter</span><span class="p">(</span><span class="s2">&quot;Normal Mode Sampling&quot;</span><span class="p">)</span>
+<span class="n">printer</span> <span class="o">=</span> <span class="n">printing</span><span class="o">.</span><span class="n">getPrinter</span><span class="p">(</span><span class="s2">"Normal Mode Sampling"</span><span class="p">)</span>
 
-<span class="c1"># Add this module&#39;s properties to the standard properties</span>
-<span class="n">path</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s2">&quot;normal_mode_sampling_step&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
-<span class="n">csv_file</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;properties.csv&quot;</span>
+<span class="c1"># Add this module's properties to the standard properties</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s2">"normal_mode_sampling_step"</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"data"</span>
+<span class="n">csv_file</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">"properties.csv"</span>
 <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="n">molsystem</span><span class="o">.</span><span class="n">add_properties_from_file</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
 
@@ -557,28 +556,28 @@
 <span class="n">_Q_SI_TO_AMU_HALF_ANG</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">_AMU_KG</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="mf">1.0e-10</span><span class="p">)</span>
 
 <span class="c1"># Modes with |frequency| at or below this are treated as translation/rotation or</span>
-<span class="c1"># numerical zeros and are not sampled; more negative than this is &quot;imaginary&quot;.</span>
+<span class="c1"># numerical zeros and are not sampled; more negative than this is "imaginary".</span>
 <span class="n">ZERO_MODE_THRESHOLD_CM</span> <span class="o">=</span> <span class="mf">10.0</span>
 
 <span class="c1"># Per-configuration properties stored on each generated structure. A fixed suffix</span>
-<span class="c1"># (not &quot;{model}&quot;) keeps the names stable so downstream steps can reliably filter</span>
-<span class="c1"># on them, mirroring the dimer_builder &quot;#DimerBuilder#scan&quot; convention.</span>
-<span class="n">_HARMONIC_ENERGY_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;harmonic energy#NormalModeSampling#sampling&quot;</span>
-<span class="n">_DISPLACEMENT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;normal mode displacement#NormalModeSampling#sampling&quot;</span>
+<span class="c1"># (not "{model}") keeps the names stable so downstream steps can reliably filter</span>
+<span class="c1"># on them, mirroring the dimer_builder "#DimerBuilder#scan" convention.</span>
+<span class="n">_HARMONIC_ENERGY_PROPERTY</span> <span class="o">=</span> <span class="s2">"harmonic energy#NormalModeSampling#sampling"</span>
+<span class="n">_DISPLACEMENT_PROPERTY</span> <span class="o">=</span> <span class="s2">"normal mode displacement#NormalModeSampling#sampling"</span>
 
 
 <span class="c1"># --------------------------------------------------------------------------- #</span>
 <span class="c1"># Pure-physics helpers (no flowchart state -- unit-testable on their own)</span>
 <span class="c1"># --------------------------------------------------------------------------- #</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_translation_rotation_basis</span><span class="p">(</span><span class="n">masses_amu</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Orthonormal mass-weighted translation/rotation vectors (Eckart).</span>
+<span class="w">    </span><span class="sd">"""Orthonormal mass-weighted translation/rotation vectors (Eckart).</span>
 
 <span class="sd">    Returns an ``(3N, k)`` array whose columns span the ``k`` (=6, or 5 for a</span>
 <span class="sd">    linear molecule) infinitesimal translations and rotations in mass-weighted</span>
 <span class="sd">    Cartesian coordinates, orthonormalized. Projecting these out of the</span>
 <span class="sd">    mass-weighted Hessian removes the external degrees of freedom before</span>
 <span class="sd">    diagonalization.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">masses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">masses_amu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">masses</span><span class="o">.</span><span class="n">size</span>
@@ -616,7 +615,7 @@
 <div class="viewcode-block" id="normal_mode_analysis">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.normal_mode_analysis">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normal_mode_analysis</span><span class="p">(</span><span class="n">hessian_au</span><span class="p">,</span> <span class="n">masses_amu</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Diagonalize the (projected, mass-weighted) Hessian.</span>
+<span class="w">    </span><span class="sd">"""Diagonalize the (projected, mass-weighted) Hessian.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -634,7 +633,7 @@
 <span class="sd">    modes_mw : (3N, 3N) ndarray</span>
 <span class="sd">        The corresponding orthonormal mass-weighted eigenvectors, as columns in</span>
 <span class="sd">        the same order as ``frequencies_cm``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">masses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">masses_amu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">masses</span><span class="o">.</span><span class="n">size</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">hessian_au</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
@@ -654,7 +653,7 @@
     <span class="n">eigvals</span><span class="p">,</span> <span class="n">eigvecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">H_mw</span><span class="p">)</span>
 
     <span class="n">lam_si</span> <span class="o">=</span> <span class="n">eigvals</span> <span class="o">*</span> <span class="n">_LAMBDA_AU_TO_SI</span>  <span class="c1"># angular-frequency^2, 1/s^2</span>
-    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">):</span>
         <span class="n">freq_cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">lam_si</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lam_si</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">_C_CM_S</span><span class="p">)</span>
 
     <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">freq_cm</span><span class="p">)</span>
@@ -663,16 +662,16 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sigma_squared</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">temperature</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance of the normal coordinate (mass-weighted, SI: kg m^2).</span>
+<span class="w">    </span><span class="sd">"""Variance of the normal coordinate (mass-weighted, SI: kg m^2).</span>
 
 <span class="sd">    ``omega`` is the angular frequency (1/s). ``distribution`` is one of</span>
 <span class="sd">    ``wigner``, ``classical``, ``ground``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">&quot;classical&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"classical"</span><span class="p">:</span>
         <span class="c1"># &lt;Q^2&gt; = kT / omega^2 for a unit-mass harmonic oscillator.</span>
         <span class="k">return</span> <span class="n">_KB_J_K</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">/</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">zpe_var</span> <span class="o">=</span> <span class="n">_HBAR_J_S</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">omega</span><span class="p">)</span>  <span class="c1"># ground-state (T -&gt; 0) width</span>
-    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">&quot;ground&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"ground"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">zpe_var</span>
     <span class="c1"># Wigner (quantum) width at finite T.</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">_HBAR_J_S</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">_KB_J_K</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">)</span>
@@ -687,14 +686,14 @@
     <span class="n">masses_amu</span><span class="p">,</span>
     <span class="n">n_samples</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;wigner&quot;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s2">"wigner"</span><span class="p">,</span>
     <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span>
     <span class="n">amplitude_cap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">energy_ceiling</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">max_tries_factor</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw displaced geometries by normal-mode sampling.</span>
+<span class="w">    </span><span class="sd">"""Draw displaced geometries by normal-mode sampling.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -706,7 +705,7 @@
 <span class="sd">        Atomic masses (amu).</span>
 <span class="sd">    n_samples : int</span>
 <span class="sd">        Number of accepted geometries to return.</span>
-<span class="sd">    distribution : {&quot;wigner&quot;, &quot;classical&quot;, &quot;ground&quot;}</span>
+<span class="sd">    distribution : {"wigner", "classical", "ground"}</span>
 <span class="sd">    temperature : float</span>
 <span class="sd">        Temperature (K); ignored for the ground-state distribution.</span>
 <span class="sd">    amplitude_cap : float or None</span>
@@ -729,7 +728,7 @@
 <span class="sd">        sample, in amu^1/2 Angstrom (same mode order as ``frequencies_cm``).</span>
 <span class="sd">    n_rejected : int</span>
 <span class="sd">        Number of draws rejected by the energy ceiling.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
@@ -779,7 +778,7 @@
 <div class="viewcode-block" id="zero_point_energy">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.zero_point_energy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">zero_point_energy</span><span class="p">(</span><span class="n">frequencies_cm</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Harmonic zero-point energy (kJ/mol) from positive frequencies (cm^-1).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Harmonic zero-point energy (kJ/mol) from positive frequencies (cm^-1)."""</span>
     <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequencies_cm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">freqs</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">freqs</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">]</span>
     <span class="c1"># E_ZPE = 1/2 sum h c nu-tilde ; nu-tilde in cm^-1 -&gt; multiply by c[cm/s].</span>
@@ -791,21 +790,21 @@
 <div class="viewcode-block" id="NormalModeSampling">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NormalModeSampling</span><span class="p">(</span><span class="n">seamm</span><span class="o">.</span><span class="n">Node</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The non-graphical part of a Normal Mode Sampling step in a flowchart.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""The non-graphical part of a Normal Mode Sampling step in a flowchart."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">flowchart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Normal Mode Sampling&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"Normal Mode Sampling"</span><span class="p">,</span>
         <span class="n">extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A step for Normal Mode Sampling in a SEAMM flowchart.&quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating Normal Mode Sampling </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""A step for Normal Mode Sampling in a SEAMM flowchart."""</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Creating Normal Mode Sampling </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">flowchart</span><span class="o">=</span><span class="n">flowchart</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Normal Mode Sampling&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"Normal Mode Sampling"</span><span class="p">,</span>
             <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">,</span>
             <span class="n">module</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
@@ -816,75 +815,75 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The semantic version of this module.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The semantic version of this module."""</span>
         <span class="k">return</span> <span class="n">normal_mode_sampling_step</span><span class="o">.</span><span class="n">__version__</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">git_revision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The git version of this module.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The git version of this module."""</span>
         <span class="k">return</span> <span class="n">normal_mode_sampling_step</span><span class="o">.</span><span class="n">__git_revision__</span>
 
 <div class="viewcode-block" id="NormalModeSampling.description_text">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling.description_text">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">description_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the text description of what this step will do.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create the text description of what this step will do."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">P</span><span class="p">:</span>
             <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values_to_dict</span><span class="p">()</span>
 
-        <span class="n">distribution</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">]</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;number of samples&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;ground&quot;</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="s2">&quot;0 K (zero-point motion only)&quot;</span>
+        <span class="n">distribution</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"distribution"</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"ground"</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="s2">"0 K (zero-point motion only)"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Sampling </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> displaced geometr&quot;</span>
-            <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;y&quot;</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span> <span class="k">else</span> <span class="s2">&quot;ies&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; per reference structure from the &#39;</span><span class="si">{</span><span class="n">distribution</span><span class="si">}</span><span class="s2">&#39; normal-mode &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;distribution at </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">, using the Hessian from the model chemistry &quot;</span>
-            <span class="s2">&quot;defined earlier in the flowchart. Translational, rotational, and &quot;</span>
-            <span class="s2">&quot;imaginary modes are excluded. The structures are written to the &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;system &#39;</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">&#39;system name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; for downstream single-point evaluation.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Sampling </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> displaced geometr"</span>
+            <span class="o">+</span> <span class="p">(</span><span class="s2">"y"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span> <span class="k">else</span> <span class="s2">"ies"</span><span class="p">)</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">" per reference structure from the '</span><span class="si">{</span><span class="n">distribution</span><span class="si">}</span><span class="s2">' normal-mode "</span>
+            <span class="sa">f</span><span class="s2">"distribution at </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">, using the Hessian from the model chemistry "</span>
+            <span class="s2">"defined earlier in the flowchart. Translational, rotational, and "</span>
+            <span class="s2">"imaginary modes are excluded. The structures are written to the "</span>
+            <span class="sa">f</span><span class="s2">"system '</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'system name'</span><span class="p">]</span><span class="si">}</span><span class="s2">' for downstream single-point evaluation."</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="NormalModeSampling.run">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a Normal Mode Sampling step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Run a Normal Mode Sampling step."""</span>
         <span class="n">next_node</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">printer</span><span class="p">)</span>
         <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">current_values_to_dict</span><span class="p">(</span>
             <span class="n">context</span><span class="o">=</span><span class="n">seamm</span><span class="o">.</span><span class="n">flowchart_variables</span><span class="o">.</span><span class="n">_data</span>
         <span class="p">)</span>
 
         <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description_text</span><span class="p">(</span><span class="n">P</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indent</span><span class="p">))</span>
-        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 
         <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
         <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">system_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;_system_db&quot;</span><span class="p">)</span>
-        <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rng</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;random seed&quot;</span><span class="p">])</span>
+        <span class="n">system_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">"_system_db"</span><span class="p">)</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rng</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"random seed"</span><span class="p">])</span>
 
-        <span class="n">distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distribution_key</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">])</span>
-        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">],</span> <span class="s2">&quot;K&quot;</span><span class="p">)</span>
-        <span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;amplitude cap&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;amplitude cap&quot;</span><span class="p">])</span>
+        <span class="n">distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distribution_key</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"distribution"</span><span class="p">])</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">],</span> <span class="s2">"K"</span><span class="p">)</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"amplitude cap"</span><span class="p">])</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"amplitude cap"</span><span class="p">])</span>
         <span class="n">ceiling</span> <span class="o">=</span> <span class="p">(</span>
             <span class="kc">None</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;energy ceiling&quot;</span><span class="p">])</span>
-            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;energy ceiling&quot;</span><span class="p">],</span> <span class="s2">&quot;kJ/mol&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"energy ceiling"</span><span class="p">])</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"energy ceiling"</span><span class="p">],</span> <span class="s2">"kJ/mol"</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="n">references</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_pool</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">system_db</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">references</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Normal Mode Sampling found no reference configuration to sample.&quot;</span>
+                <span class="s2">"Normal Mode Sampling found no reference configuration to sample."</span>
             <span class="p">)</span>
 
-        <span class="c1"># Build the output system from the first reference&#39;s topology.</span>
+        <span class="c1"># Build the output system from the first reference's topology.</span>
         <span class="n">out_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_system_name</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">references</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">out_sys</span> <span class="o">=</span> <span class="n">system_db</span><span class="o">.</span><span class="n">create_combined_system</span><span class="p">([</span><span class="n">references</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">out_sys</span><span class="o">.</span><span class="n">configuration</span>
@@ -912,33 +911,33 @@
                 <span class="n">worst</span> <span class="o">=</span> <span class="n">freqs_cm</span><span class="p">[</span><span class="n">imaginary</span><span class="p">]</span>
                 <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span>
                     <span class="n">__</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Warning: reference </span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2"> has &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> imaginary frequenc&quot;</span>
-                        <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;y&quot;</span> <span class="k">if</span> <span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;ies&quot;</span><span class="p">)</span>
-                        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; (down to </span><span class="si">{</span><span class="n">worst</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">i cm^-1). These are not &quot;</span>
-                        <span class="s2">&quot;sampled; the geometry is not a minimum (fine for a &quot;</span>
-                        <span class="s2">&quot;transition state).&quot;</span><span class="p">,</span>
-                        <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">"Warning: reference </span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2"> has "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> imaginary frequenc"</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="s2">"y"</span> <span class="k">if</span> <span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">"ies"</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="sa">f</span><span class="s2">" (down to </span><span class="si">{</span><span class="n">worst</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">i cm^-1). These are not "</span>
+                        <span class="s2">"sampled; the geometry is not a minimum (fine for a "</span>
+                        <span class="s2">"transition state)."</span><span class="p">,</span>
+                        <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
 
             <span class="n">vib_freqs</span> <span class="o">=</span> <span class="n">freqs_cm</span><span class="p">[</span><span class="n">vibrational</span><span class="p">]</span>
             <span class="n">vib_modes</span> <span class="o">=</span> <span class="n">modes_mw</span><span class="p">[:,</span> <span class="n">vibrational</span><span class="p">]</span>
 
-            <span class="n">keep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_mode_selection</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;modes&quot;</span><span class="p">],</span> <span class="n">vib_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">keep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_mode_selection</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"modes"</span><span class="p">],</span> <span class="n">vib_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
             <span class="n">sel_freqs</span> <span class="o">=</span> <span class="n">vib_freqs</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
             <span class="n">sel_modes</span> <span class="o">=</span> <span class="n">vib_modes</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">sel_freqs</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Reference </span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2"> has no vibrational modes to sample &quot;</span>
-                    <span class="s2">&quot;after applying the mode selection.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Reference </span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2"> has no vibrational modes to sample "</span>
+                    <span class="s2">"after applying the mode selection."</span>
                 <span class="p">)</span>
 
             <span class="n">displacements</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">q_vectors</span><span class="p">,</span> <span class="n">n_rejected</span> <span class="o">=</span> <span class="n">sample_normal_modes</span><span class="p">(</span>
                 <span class="n">sel_freqs</span><span class="p">,</span>
                 <span class="n">sel_modes</span><span class="p">,</span>
                 <span class="n">masses</span><span class="p">,</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">&quot;number of samples&quot;</span><span class="p">]),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]),</span>
                 <span class="n">distribution</span><span class="o">=</span><span class="n">distribution</span><span class="p">,</span>
                 <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
                 <span class="n">amplitude_cap</span><span class="o">=</span><span class="n">cap</span><span class="p">,</span>
@@ -953,61 +952,61 @@
                 <span class="n">conf</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">coords</span> <span class="o">+</span> <span class="n">dx</span><span class="p">,</span> <span class="n">fractionals</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">conf</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configuration_name</span><span class="p">(</span>
-                    <span class="n">P</span><span class="p">[</span><span class="s2">&quot;configuration name&quot;</span><span class="p">],</span> <span class="n">ref_index</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span>
+                    <span class="n">P</span><span class="p">[</span><span class="s2">"configuration name"</span><span class="p">],</span> <span class="n">ref_index</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="c1"># Per-structure provenance, so downstream steps can filter on the</span>
                 <span class="c1"># predicted energy and inspect the normal-mode displacement.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_put_property</span><span class="p">(</span>
-                    <span class="n">conf</span><span class="p">,</span> <span class="n">_HARMONIC_ENERGY_PROPERTY</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;kJ/mol&quot;</span>
+                    <span class="n">conf</span><span class="p">,</span> <span class="n">_HARMONIC_ENERGY_PROPERTY</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">"kJ/mol"</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_put_property</span><span class="p">(</span>
                     <span class="n">conf</span><span class="p">,</span>
                     <span class="n">_DISPLACEMENT_PROPERTY</span><span class="p">,</span>
                     <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">q_vectors</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-                    <span class="s2">&quot;Å*u^1/2&quot;</span><span class="p">,</span>
-                    <span class="n">_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+                    <span class="s2">"Å*u^1/2"</span><span class="p">,</span>
+                    <span class="n">_type</span><span class="o">=</span><span class="s2">"json"</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">ref_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">first_freqs</span> <span class="o">=</span> <span class="n">vib_freqs</span>
                 <span class="n">first_zpe</span> <span class="o">=</span> <span class="n">zero_point_energy</span><span class="p">(</span><span class="n">vib_freqs</span><span class="p">)</span>
                 <span class="n">first_counts</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;vibrational&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">vibrational</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
-                    <span class="s2">&quot;sampled&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">sel_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
-                    <span class="s2">&quot;imaginary&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
-                    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">low</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+                    <span class="s2">"vibrational"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">vibrational</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+                    <span class="s2">"sampled"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">sel_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
+                    <span class="s2">"imaginary"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">imaginary</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+                    <span class="s2">"low"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">low</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
                 <span class="p">}</span>
 
         <span class="c1"># Make the new system and its first configuration current.</span>
         <span class="n">system_db</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">out_sys</span>
         <span class="n">out_sys</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">out_sys</span><span class="o">.</span><span class="n">configurations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
 
-        <span class="c1"># Cite the method. The plug-in&#39;s own reference is added by the base class,</span>
+        <span class="c1"># Cite the method. The plug-in's own reference is added by the base class,</span>
         <span class="c1"># which has already loaded data/references.bib into self._bibliography.</span>
-        <span class="k">if</span> <span class="s2">&quot;wigner1932&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"wigner1932"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="o">.</span><span class="n">cite</span><span class="p">(</span>
-                <span class="n">raw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">[</span><span class="s2">&quot;wigner1932&quot;</span><span class="p">],</span>
-                <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;wigner1932&quot;</span><span class="p">,</span>
-                <span class="n">module</span><span class="o">=</span><span class="s2">&quot;normal_mode_sampling_step&quot;</span><span class="p">,</span>
+                <span class="n">raw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">[</span><span class="s2">"wigner1932"</span><span class="p">],</span>
+                <span class="n">alias</span><span class="o">=</span><span class="s2">"wigner1932"</span><span class="p">,</span>
+                <span class="n">module</span><span class="o">=</span><span class="s2">"normal_mode_sampling_step"</span><span class="p">,</span>
                 <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">note</span><span class="o">=</span><span class="s2">&quot;The quantum (Wigner) phase-space distribution used to set &quot;</span>
-                <span class="s2">&quot;the normal-mode sampling amplitudes.&quot;</span><span class="p">,</span>
+                <span class="n">note</span><span class="o">=</span><span class="s2">"The quantum (Wigner) phase-space distribution used to set "</span>
+                <span class="s2">"the normal-mode sampling amplitudes."</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;number of samples&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
-            <span class="s2">&quot;number of rejected samples&quot;</span><span class="p">:</span> <span class="n">n_rejected_total</span><span class="p">,</span>
+            <span class="s2">"number of samples"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+            <span class="s2">"number of rejected samples"</span><span class="p">:</span> <span class="n">n_rejected_total</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">first_freqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;frequencies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">first_freqs</span><span class="p">]</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;zero point energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">first_zpe</span><span class="p">)</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;number of vibrational modes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">&quot;vibrational&quot;</span><span class="p">]</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;number of sampled modes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">&quot;sampled&quot;</span><span class="p">]</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;number of imaginary modes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">&quot;imaginary&quot;</span><span class="p">]</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;number of low modes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"frequencies"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">first_freqs</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"zero point energy"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">first_zpe</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"number of vibrational modes"</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">"vibrational"</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"number of sampled modes"</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">"sampled"</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"number of imaginary modes"</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">"imaginary"</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"number of low modes"</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_counts</span><span class="p">[</span><span class="s2">"low"</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">energies_all</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mean harmonic energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">energies_all</span><span class="p">))</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;maximum harmonic energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energies_all</span><span class="p">))</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"mean harmonic energy"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">energies_all</span><span class="p">))</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">"maximum harmonic energy"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energies_all</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">P</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">,</span> <span class="n">n_refs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">references</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_results</span><span class="p">(</span><span class="n">configuration</span><span class="o">=</span><span class="n">base</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -1019,45 +1018,54 @@
     <span class="c1"># Hessian acquisition (Model Chemistry over MDI)</span>
     <span class="c1"># ------------------------------------------------------------------ #</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the Cartesian Hessian (hartree/bohr^2) for a configuration.</span>
+<span class="w">        </span><span class="sd">"""Return the Cartesian Hessian (hartree/bohr^2) for a configuration.</span>
 
 <span class="sd">        Uses the ``_model_chemistry`` published upstream, driven over MDI:</span>
 <span class="sd">        analytic if the engine exposes a ``hessian`` method (a future custom</span>
 <span class="sd">        ``&lt;HESSIAN`` command), otherwise central finite differences of the</span>
 <span class="sd">        forces over the resident engine.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_exists</span><span class="p">(</span><span class="s2">&quot;_model_chemistry&quot;</span><span class="p">):</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_exists</span><span class="p">(</span><span class="s2">"_model_chemistry"</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Normal Mode Sampling needs a Model Chemistry: add a &#39;Model &quot;</span>
-                <span class="s2">&quot;Chemistry&#39; step before it to choose the method for the Hessian.&quot;</span>
+                <span class="s2">"Normal Mode Sampling needs a Model Chemistry: add a 'Model "</span>
+                <span class="s2">"Chemistry' step before it to choose the method for the Hessian."</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">periodicity</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Normal Mode Sampling supports only non-periodic (molecular) &quot;</span>
-                <span class="s2">&quot;systems.&quot;</span>
+                <span class="s2">"Normal Mode Sampling supports only non-periodic (molecular) "</span>
+                <span class="s2">"systems."</span>
             <span class="p">)</span>
 
-        <span class="n">mc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;_model_chemistry&quot;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">mc</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mdi_capable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">"_model_chemistry"</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">mc</span><span class="p">[</span><span class="s2">"options"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_capable"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The model chemistry &#39;</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; cannot be driven via MDI, &quot;</span>
-                <span class="s2">&quot;which the Hessian (analytic or finite-difference of forces) &quot;</span>
-                <span class="s2">&quot;requires. Choose an MDI-capable model chemistry.&quot;</span>
+                <span class="sa">f</span><span class="s2">"The model chemistry '</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="si">}</span><span class="s2">' cannot be driven via MDI, "</span>
+                <span class="s2">"which the Hessian (analytic or finite-difference of forces) "</span>
+                <span class="s2">"requires. Choose an MDI-capable model chemistry."</span>
             <span class="p">)</span>
 
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flowchart</span><span class="o">.</span><span class="n">plugin_manager</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mc</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">])</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flowchart</span><span class="o">.</span><span class="n">plugin_manager</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mc</span><span class="p">[</span><span class="s2">"step"</span><span class="p">])</span>
+        <span class="c1"># The engine's real keyword (an ORCA functional's alias undone) and the</span>
+        <span class="c1"># user's basis, for programs that take one; MOPAC, xTB and MLFFs take</span>
+        <span class="c1"># a method alone.</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_method_arg"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">mc</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_basis_arg"</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">build_argv</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">basis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">"basis"</span><span class="p">]</span> <span class="o">=</span> <span class="n">basis</span>
             <span class="k">return</span> <span class="n">step</span><span class="o">.</span><span class="n">get_mdi_engine_command</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flowchart</span><span class="o">.</span><span class="n">executor</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">global_options</span><span class="p">,</span>
-                <span class="n">method</span><span class="o">=</span><span class="n">mc</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">],</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
                 <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
                 <span class="n">hostname</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
                 <span class="n">charge</span><span class="o">=</span><span class="n">configuration</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span>
                 <span class="n">multiplicity</span><span class="o">=</span><span class="n">configuration</span><span class="o">.</span><span class="n">spin_multiplicity</span><span class="p">,</span>
                 <span class="n">n_atoms</span><span class="o">=</span><span class="n">configuration</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">)</span>
@@ -1067,34 +1075,34 @@
         <span class="p">)</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">MDIEngine</span><span class="p">(</span><span class="n">build_argv</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SEAMM&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span> <span class="k">as</span> <span class="n">eng</span><span class="p">:</span>
-            <span class="n">eng</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">MDIEngine</span><span class="p">(</span><span class="n">build_argv</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SEAMM"</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span> <span class="k">as</span> <span class="n">eng</span><span class="p">:</span>
+            <span class="n">eng</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"Å"</span><span class="p">)</span>
             <span class="c1"># The engine advertises &lt;HESSIAN only when it has a genuine analytic</span>
             <span class="c1"># Hessian for this method, so supports() is the truthful capability</span>
             <span class="c1"># check: use the analytic Hessian when offered, else finite-difference</span>
             <span class="c1"># the forces over the warm engine.</span>
-            <span class="k">if</span> <span class="n">eng</span><span class="o">.</span><span class="n">supports</span><span class="p">(</span><span class="s2">&quot;&lt;HESSIAN&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">eng</span><span class="o">.</span><span class="n">supports</span><span class="p">(</span><span class="s2">"&lt;HESSIAN"</span><span class="p">):</span>
                 <span class="c1"># Analytic Hessian: (3N, 3N) in hartree/bohr^2.</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">eng</span><span class="o">.</span><span class="n">hessian</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd_hessian</span><span class="p">(</span><span class="n">eng</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_fd_hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">coords_ang</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">delta_bohr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Central-difference Hessian (hartree/bohr^2) from MDI forces.&quot;&quot;&quot;</span>
-        <span class="n">x0</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">&quot;bohr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Central-difference Hessian (hartree/bohr^2) from MDI forces."""</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="s2">"Å"</span><span class="p">)</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"bohr"</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">ndof</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n_atoms</span>
         <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndof</span><span class="p">,</span> <span class="n">ndof</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndof</span><span class="p">):</span>
             <span class="n">xp</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">xp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">delta_bohr</span>
-            <span class="n">engine</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;bohr&quot;</span><span class="p">)</span>
-            <span class="n">fp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">forces</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="s2">&quot;hartree/bohr&quot;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"bohr"</span><span class="p">)</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">forces</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="s2">"hartree/bohr"</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="o">-</span><span class="mi">1</span>
             <span class="p">)</span>
 
             <span class="n">xm</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">xm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">delta_bohr</span>
-            <span class="n">engine</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;bohr&quot;</span><span class="p">)</span>
-            <span class="n">fm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">forces</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="s2">&quot;hartree/bohr&quot;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"bohr"</span><span class="p">)</span>
+            <span class="n">fm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">forces</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="s2">"hartree/bohr"</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="o">-</span><span class="mi">1</span>
             <span class="p">)</span>
 
@@ -1106,68 +1114,68 @@
     <span class="c1"># Input selection, naming, and small parameter helpers</span>
     <span class="c1"># ------------------------------------------------------------------ #</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_reference_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">system_db</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the &#39;structure&#39; parameters to a list of configurations.&quot;&quot;&quot;</span>
-        <span class="n">spec</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""Resolve the 'structure' parameters to a list of configurations."""</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"structure"</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">spec</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;current&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">spec</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"current"</span><span class="p">):</span>
             <span class="n">system</span> <span class="o">=</span> <span class="n">system_db</span><span class="o">.</span><span class="n">system</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">system</span> <span class="o">=</span> <span class="n">system_db</span><span class="o">.</span><span class="n">get_system</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 
-        <span class="n">how</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;structure configurations&quot;</span><span class="p">]</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;structure configuration name&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;current&quot;</span><span class="p">:</span>
+        <span class="n">how</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"structure configurations"</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"structure configuration name"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"current"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">system</span><span class="o">.</span><span class="n">configuration</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_configurations</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">how</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_select_configurations</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">how</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pick configurations from a system, mirroring the loop/dimer steps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Pick configurations from a system, mirroring the loop/dimer steps."""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
         <span class="n">configurations</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">configurations</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"all"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">configurations</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;last&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"last"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">configurations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;first&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"first"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">configurations</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;name is&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"name is"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configurations</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;name matches&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"name matches"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configurations</span> <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;name regexp&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">"name regexp"</span><span class="p">:</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configurations</span> <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown configuration selector &#39;</span><span class="si">{</span><span class="n">how</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown configuration selector '</span><span class="si">{</span><span class="n">how</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_output_system_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">&quot;system name&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;from structure&quot;</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">base</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;structure&quot;</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2"> - NMS&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"system name"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"from structure"</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">"structure"</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2"> - NMS"</span>
         <span class="k">return</span> <span class="n">name</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_configuration_name</span><span class="p">(</span><span class="n">naming</span><span class="p">,</span> <span class="n">ref_index</span><span class="p">,</span> <span class="n">running_index</span><span class="p">,</span> <span class="n">per_ref</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">naming</span> <span class="o">==</span> <span class="s2">&quot;sample number&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">naming</span> <span class="o">==</span> <span class="s2">"sample number"</span><span class="p">:</span>
             <span class="n">within</span> <span class="o">=</span> <span class="p">(</span><span class="n">running_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">per_ref</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">within</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">naming</span> <span class="o">==</span> <span class="s2">&quot;reference,sample&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">naming</span> <span class="o">==</span> <span class="s2">"reference,sample"</span><span class="p">:</span>
             <span class="n">within</span> <span class="o">=</span> <span class="p">(</span><span class="n">running_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">per_ref</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">within</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ref_index</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">within</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">running_index</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_put_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">_type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a property on a configuration (defining it if not registered).</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_put_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">_type</span><span class="o">=</span><span class="s2">"float"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Store a property on a configuration (defining it if not registered).</span>
 
 <span class="sd">        The properties are normally pre-registered from data/properties.csv; the</span>
 <span class="sd">        fallback definition here covers a configuration whose database lacks that</span>
 <span class="sd">        registration.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">properties</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">properties</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">properties</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
             <span class="n">properties</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_type</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">units</span><span class="p">,</span> <span class="n">noerror</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1175,7 +1183,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"random"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
             <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
@@ -1183,19 +1191,19 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_distribution_key</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;classical&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;classical&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;ground&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;ground&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;wigner&quot;</span>
+        <span class="k">if</span> <span class="s2">"classical"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"classical"</span>
+        <span class="k">if</span> <span class="s2">"ground"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"ground"</span>
+        <span class="k">return</span> <span class="s2">"wigner"</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_is_none</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_as_float</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Coerce a parameter (possibly a pint quantity) to a float in units.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Coerce a parameter (possibly a pint quantity) to a float in units."""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -1203,17 +1211,17 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_mode_selection</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">n_modes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a boolean mask over the ``n_modes`` vibrational modes.</span>
+<span class="w">        </span><span class="sd">"""Return a boolean mask over the ``n_modes`` vibrational modes.</span>
 
-<span class="sd">        ``spec`` is &#39;all&#39; or a comma/space list of 1-based indices and ranges</span>
-<span class="sd">        (e.g. &#39;1-3, 7&#39;), indexing the vibrational modes by increasing frequency.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="sd">        ``spec`` is 'all' or a comma/space list of 1-based indices and ranges</span>
+<span class="sd">        (e.g. '1-3, 7'), indexing the vibrational modes by increasing frequency.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"all"</span><span class="p">,</span> <span class="s2">""</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_modes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_modes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-            <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">token</span><span class="p">:</span>
-                <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"-"</span> <span class="ow">in</span> <span class="n">token</span><span class="p">:</span>
+                <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">lo</span> <span class="o">=</span> <span class="n">hi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
@@ -1224,42 +1232,42 @@
 
 <div class="viewcode-block" id="NormalModeSampling.analyze">
 <a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.NormalModeSampling.analyze">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">analyze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">n_refs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Summarize what was generated to the step&#39;s output.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">n_refs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Summarize what was generated to the step's output."""</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;number of samples&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> configurations in the system &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s2">&#39; from </span><span class="si">{</span><span class="n">n_refs</span><span class="si">}</span><span class="s2"> reference &quot;</span>
-            <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;structure&quot;</span> <span class="k">if</span> <span class="n">n_refs</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;structures&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Created </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of samples'</span><span class="p">]</span><span class="si">}</span><span class="s2"> configurations in the system "</span>
+            <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s2">' from </span><span class="si">{</span><span class="n">n_refs</span><span class="si">}</span><span class="s2"> reference "</span>
+            <span class="o">+</span> <span class="p">(</span><span class="s2">"structure"</span> <span class="k">if</span> <span class="n">n_refs</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">"structures"</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">"."</span>
         <span class="p">)</span>
-        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="s2">&quot;number of vibrational modes&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"number of vibrational modes"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The first reference has </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;number of vibrational modes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;vibrational modes (</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;number of sampled modes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> sampled, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;number of imaginary modes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> imaginary), with a harmonic &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;zero-point energy of </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;zero point energy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol.&quot;</span>
+                <span class="sa">f</span><span class="s2">"The first reference has </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of vibrational modes'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"vibrational modes (</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of sampled modes'</span><span class="p">]</span><span class="si">}</span><span class="s2"> sampled, "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of imaginary modes'</span><span class="p">]</span><span class="si">}</span><span class="s2"> imaginary), with a harmonic "</span>
+                <span class="sa">f</span><span class="s2">"zero-point energy of </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'zero point energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol."</span>
             <span class="p">)</span>
-            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="s2">&quot;mean harmonic energy&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"mean harmonic energy"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The sampled ensemble has a mean harmonic energy of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mean harmonic energy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol above the reference &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(maximum </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;maximum harmonic energy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol)&quot;</span>
+                <span class="sa">f</span><span class="s2">"The sampled ensemble has a mean harmonic energy of "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'mean harmonic energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol above the reference "</span>
+                <span class="sa">f</span><span class="s2">"(maximum </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'maximum harmonic energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol)"</span>
                 <span class="o">+</span> <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;; </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;number of rejected samples&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> draws were rejected &quot;</span>
-                    <span class="s2">&quot;by the energy ceiling.&quot;</span>
-                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;number of rejected samples&quot;</span><span class="p">)</span>
-                    <span class="k">else</span> <span class="s2">&quot;.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"; </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of rejected samples'</span><span class="p">]</span><span class="si">}</span><span class="s2"> draws were rejected "</span>
+                    <span class="s2">"by the energy ceiling."</span>
+                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"number of rejected samples"</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="s2">"."</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
-        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">))</span>
+        <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -1291,8 +1299,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1304,7 +1312,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
 </p></div>
       
     </div>
