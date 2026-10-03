@@ -570,35 +570,64 @@ class NormalModeSampling(seamm.Node):
         )
 
         n = len(elements)
-        if options.get("mdi_capable", False):
-            from seamm_mdi import MDIEngine  # only for the MDI routes
-
-            try:
-                eng = MDIEngine(build_argv, elements, name="SEAMM", logger=self.logger)
-                eng.start()
-            except Exception as e:
-                # No engine here (e.g. the code is installed only on the job's
-                # cluster): the finite difference as tasks, if the program can.
-                if not hasattr(evaluator.provider, "get_task"):
-                    raise
-                self.logger.warning(
-                    f"Could not start the MDI engine ({e}); computing the Hessian "
-                    "by finite differences as separate calculations."
+        has_tasks = hasattr(evaluator.provider, "get_task")
+        target = evaluator.target
+        on_queue = target is not None and getattr(target, "tasks", None) in (
+            "queue",
+            "taskserver",
+        )
+        # The route (design, 2026-10-03):
+        # - on a queue target the target wins: the finite difference as tasks
+        #   on the cluster, with no local engine started even to ask;
+        # - otherwise the analytic Hessian over MDI when the program has one
+        #   (the 'analytic_hessian' option if it says, else the engine's
+        #   <HESSIAN), else the finite difference: as tasks if the evaluator
+        #   chose them, else over the warm engine;
+        # - with no MDI engine, the finite difference as tasks.
+        if on_queue and has_tasks:
+            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+        if not options.get("mdi_capable", False):
+            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+        if options.get("analytic_hessian") is False and evaluator.path == "batch":
+            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+        if has_tasks and not self._code_is_here(step):
+            printer.important(
+                __(
+                    f"{mc['level']} is not installed on this machine, so the "
+                    "Hessian is computed by finite differences, as separate "
+                    "calculations where the job runs its tasks.",
+                    indent=self.indent + 4 * " ",
                 )
-                return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-            with eng:
-                eng.set_coordinates(coords_ang, units="Å")
-                # The engine advertises <HESSIAN only when it has a genuine
-                # analytic Hessian for this method, so supports() is the truthful
-                # capability check: use the analytic Hessian when offered.
-                if eng.supports("<HESSIAN"):
-                    # Analytic Hessian: (3N, 3N) in hartree/bohr^2.
-                    return np.asarray(eng.hessian(), dtype=float).reshape(3 * n, 3 * n)
-                # Otherwise finite-difference the forces: over the warm engine,
-                # unless the evaluator runs this model chemistry as tasks.
-                if evaluator.path != "batch":
-                    return self._fd_hessian(eng, coords_ang, n)
+            )
+            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+
+        from seamm_mdi import MDIEngine  # only for the MDI routes
+
+        with MDIEngine(build_argv, elements, name="SEAMM", logger=self.logger) as eng:
+            eng.set_coordinates(coords_ang, units="Å")
+            # The engine advertises <HESSIAN only when it has a genuine analytic
+            # Hessian for this method, so supports() is the truthful capability
+            # check: use the analytic Hessian when offered.
+            if eng.supports("<HESSIAN"):
+                # Analytic Hessian: (3N, 3N) in hartree/bohr^2.
+                return np.asarray(eng.hessian(), dtype=float).reshape(3 * n, 3 * n)
+            # Otherwise finite-difference the forces: over the warm engine,
+            # unless the evaluator runs this model chemistry as tasks.
+            if evaluator.path != "batch":
+                return self._fd_hessian(eng, coords_ang, n)
         return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
+
+    def _code_is_here(self, step):
+        """Whether the program is installed where this step runs: its
+        ``get_executor_config`` finds it (ORCA's raises when it cannot)."""
+        check = getattr(step, "get_executor_config", None)
+        if check is None:
+            return True
+        try:
+            check(self.flowchart.executor, self.global_options)
+        except Exception:
+            return False
+        return True
 
     def _fd_hessian_tasks(self, evaluator, configuration, coords_ang, delta_bohr=0.01):
         """Central-difference Hessian (hartree/bohr^2) from the gradients of the

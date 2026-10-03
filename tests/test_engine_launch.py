@@ -5,6 +5,7 @@
 import types
 
 import numpy as np
+import pytest
 
 import normal_mode_sampling_step.normal_mode_sampling as nms
 
@@ -135,46 +136,23 @@ def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
     assert np.allclose(H, K, atol=1e-8)
 
 
-def test_no_engine_falls_back_to_finite_differences_as_tasks(monkeypatch):
-    """The code is not installed where the job runs: no MDI engine, so the
-    Hessian comes from the finite difference as tasks."""
-    import seamm_mdi
-
-    class _NoEngine:
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def start(self):
-            raise RuntimeError("MDI engine exited before connecting")
-
-    monkeypatch.setattr(seamm_mdi, "MDIEngine", _NoEngine)
-
-    class _Provider(_OrcaStep):
-        get_task = staticmethod(lambda *a, **k: None)
-        analyze_task = staticmethod(lambda *a, **k: None)
-
-    step = _Provider()
-    mc = {
-        "level": "ORCA:DFT@B3LYP/def2-SVP",
-        "method": "B3LYP",
-        "basis": "def2-SVP",
-        "step": "orca-step",
-        "options": {"mdi_capable": True, "mdi_method_arg": "B3LYP"},
-    }
+def _me_and_configuration(mc, step, target=None):
     me = types.SimpleNamespace(
         variable_exists=lambda name: True,
         get_variable=lambda name: mc,
         global_options={},
+        indent="",
         logger=types.SimpleNamespace(warning=lambda *a, **k: None),
         flowchart=types.SimpleNamespace(
             executor="local",
             plugin_manager=types.SimpleNamespace(get=lambda name: step),
         ),
     )
+    me._code_is_here = lambda step: nms.NormalModeSampling._code_is_here(me, step)
     called = {}
 
     def fd_tasks(evaluator, configuration, coords):
-        called["yes"] = True
+        called["fd tasks"] = evaluator.target
         return np.eye(3)
 
     me._fd_hessian_tasks = fd_tasks
@@ -188,5 +166,93 @@ def test_no_engine_falls_back_to_finite_differences_as_tasks(monkeypatch):
             get_coordinates=lambda fractionals, as_array: [[0.0, 0.0, 0.0]],
         ),
     )
+    return me, configuration, called
+
+
+class _TaskProvider(_OrcaStep):
+    get_task = staticmethod(lambda *a, **k: None)
+    analyze_task = staticmethod(lambda *a, **k: None)
+
+
+_MC = {
+    "level": "ORCA:DFT@B3LYP/def2-SVP",
+    "method": "B3LYP",
+    "basis": "def2-SVP",
+    "step": "orca-step",
+    "options": {"mdi_capable": True, "mdi_method_arg": "B3LYP"},
+}
+
+
+def test_no_code_here_means_finite_differences_as_tasks(monkeypatch):
+    """The code is installed only where the job's tasks run: no engine is
+    started; the Hessian is the finite difference as tasks."""
+    import seamm_mdi
+
+    class _Exploding:
+        def __init__(self, *a, **k):
+            raise AssertionError("no engine may be started")
+
+    monkeypatch.setattr(seamm_mdi, "MDIEngine", _Exploding)
+
+    class _NotHere(_TaskProvider):
+        @staticmethod
+        def get_executor_config(executor, options):
+            raise RuntimeError("Could not find the 'orca' executable")
+
+    printed = []
+    monkeypatch.setattr(
+        nms.printer, "important", lambda text: printed.append(str(text))
+    )
+    me, configuration, called = _me_and_configuration(_MC, _NotHere())
     H = nms.NormalModeSampling._hessian(me, configuration)
-    assert called == {"yes": True} and H.shape == (3, 3)
+    assert "fd tasks" in called and H.shape == (3, 3)
+    assert "not installed on this machine" in printed[0]
+
+
+def test_a_queue_target_wins(monkeypatch, tmp_path):
+    """On a queue target the finite difference runs as tasks on the cluster;
+    no local engine is started even to ask for an analytic Hessian."""
+    import seamm_mdi
+    import seamm_exec.targets
+    from seamm_scheduler import TargetSection
+
+    class _Exploding:
+        def __init__(self, *a, **k):
+            raise AssertionError("no engine may be started")
+
+    monkeypatch.setattr(seamm_mdi, "MDIEngine", _Exploding)
+    section = TargetSection(
+        name="arc", transport="ssh", host="tc", type="local", tasks="queue"
+    )
+    monkeypatch.setattr(seamm_exec.targets, "find_target", lambda *a, **k: section)
+    me, configuration, called = _me_and_configuration(_MC, _TaskProvider())
+    nms.NormalModeSampling._hessian(me, configuration)
+    assert called["fd tasks"] is section
+
+
+def test_a_transient_engine_failure_is_not_hidden(monkeypatch):
+    """With the code here, an engine that fails to start is an error, not a
+    silent switch from the analytic Hessian to 6N finite-difference tasks."""
+    import seamm_mdi
+
+    class _Flaky:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            raise RuntimeError("port in use")
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr(seamm_mdi, "MDIEngine", _Flaky)
+
+    class _Here(_TaskProvider):
+        @staticmethod
+        def get_executor_config(executor, options):
+            return {"code": "/opt/orca/orca"}
+
+    me, configuration, called = _me_and_configuration(_MC, _Here())
+    with pytest.raises(RuntimeError, match="port in use"):
+        nms.NormalModeSampling._hessian(me, configuration)
+    assert called == {}
