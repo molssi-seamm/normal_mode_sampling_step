@@ -1,6 +1,21 @@
 =======
 History
 =======
+2026.10.3.1 -- The finite-difference Hessian as separate calculations, on this machine or a cluster
+    * When the job's calculations go to a cluster queue and the program can run
+      separate calculations (ORCA, MOPAC), the Hessian is the finite difference of the
+      gradients, run there as 6N calculations; nothing is started on the job's own
+      machine, where the program may not be installed.
+    * Otherwise the analytic Hessian is used when the program's MDI engine has one, and
+      ORCA's model chemistry now says so without ORCA being started to ask. Failing
+      that, ORCA's finite-difference calculations run several at a time on this
+      machine; MOPAC, xTB and MLFFs use the warm MDI engine as before.
+    * Rerunning the job reuses finished finite-difference calculations.
+    * If the program is not installed on this machine, the separate calculations are
+      used and the output says so; other failures to start the engine stop the step
+      with the reason rather than quietly switching method.
+    * Requires seamm-exec 2026.10.3 or later.
+
 2026.10.3 -- Bugfix: the Hessian used the program's method name and default basis
     * The MDI engine for the Hessian was launched with the model chemistry's
       method name alone, so ORCA ran def2-SVP whatever basis was chosen, and a
