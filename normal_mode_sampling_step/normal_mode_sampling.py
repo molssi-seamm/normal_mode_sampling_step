@@ -510,195 +510,27 @@ class NormalModeSampling(seamm.Node):
     def _hessian(self, configuration):
         """Return the Cartesian Hessian (hartree/bohr^2) for a configuration.
 
-        Uses the ``_model_chemistry`` published upstream, driven over MDI:
-        analytic if the engine exposes a ``hessian`` method (a future custom
-        ``<HESSIAN`` command), otherwise central finite differences of the
-        forces over the resident engine.
+        Uses the ``_model_chemistry`` published upstream, through the shared
+        driver in seamm_exec.hessian (also used by the Thermochemistry and
+        Vibrational Analysis steps): analytic over the MDI engine when the
+        program offers one, otherwise central finite differences of the forces
+        over the warm engine or as tasks where the job runs them.
         """
-        if not self.variable_exists("_model_chemistry"):
-            raise ValueError(
-                "Normal Mode Sampling needs a Model Chemistry: add a 'Model "
-                "Chemistry' step before it to choose the method for the Hessian."
-            )
+        from seamm_exec.hessian import HessianDriver
+
+        driver = HessianDriver(
+            self,
+            who="Normal Mode Sampling",
+            print_to=printer,
+        )
         if configuration.periodicity != 0:
             raise ValueError(
                 "Normal Mode Sampling supports only non-periodic (molecular) "
                 "systems."
             )
+        _, H, _ = driver.energy_and_hessian(configuration)
+        return H
 
-        mc = self.get_variable("_model_chemistry")
-        options = mc["options"]
-        from seamm_exec import Evaluator
-
-        try:
-            evaluator = Evaluator(self, mc, properties=("energy", "gradients"))
-        except ValueError:
-            raise ValueError(
-                f"The model chemistry '{mc['level']}' can be evaluated neither over "
-                "MDI nor as separate calculations, so it cannot give the Hessian. "
-                "Choose a model chemistry with an MDI engine or with tasks (e.g. "
-                "MOPAC, xTB or ORCA)."
-            )
-
-        step = self.flowchart.plugin_manager.get(mc["step"])
-        # The engine's real keyword (an ORCA functional's alias undone) and the
-        # user's basis, for programs that take one; MOPAC, xTB and MLFFs take
-        # a method alone.
-        method = options.get("mdi_method_arg") or mc["method"]
-        basis = options.get("mdi_basis_arg")
-
-        def build_argv(hostname, port):
-            kwargs = {}
-            if basis is not None:
-                kwargs["basis"] = basis
-            return step.get_mdi_engine_command(
-                self.flowchart.executor,
-                self.global_options,
-                method=method,
-                port=port,
-                hostname=hostname,
-                charge=configuration.charge,
-                multiplicity=configuration.spin_multiplicity,
-                n_atoms=configuration.n_atoms,
-                **kwargs,
-            )
-
-        elements = list(configuration.atoms.atomic_numbers)
-        coords_ang = np.asarray(
-            configuration.atoms.get_coordinates(fractionals=False, as_array=True),
-            dtype=float,
-        )
-
-        n = len(elements)
-        has_tasks = hasattr(evaluator.provider, "get_task")
-        target = evaluator.target
-        on_queue = target is not None and getattr(target, "tasks", None) in (
-            "queue",
-            "taskserver",
-        )
-        # The route (design, 2026-10-03):
-        # - on a queue target the target wins: the finite difference as tasks
-        #   on the cluster, with no local engine started even to ask;
-        # - otherwise the analytic Hessian over MDI when the program has one
-        #   (the 'analytic_hessian' option if it says, else the engine's
-        #   <HESSIAN), else the finite difference: as tasks if the evaluator
-        #   chose them, else over the warm engine;
-        # - with no MDI engine, the finite difference as tasks.
-        if on_queue and has_tasks:
-            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-        if not options.get("mdi_capable", False):
-            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-        if options.get("analytic_hessian") is False and evaluator.path == "batch":
-            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-        if has_tasks and not self._code_is_here(step):
-            printer.important(
-                __(
-                    f"{mc['level']} is not installed on this machine, so the "
-                    "Hessian is computed by finite differences, as separate "
-                    "calculations where the job runs its tasks.",
-                    indent=self.indent + 4 * " ",
-                )
-            )
-            return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-
-        from seamm_mdi import MDIEngine  # only for the MDI routes
-
-        with MDIEngine(build_argv, elements, name="SEAMM", logger=self.logger) as eng:
-            eng.set_coordinates(coords_ang, units="Å")
-            # The engine advertises <HESSIAN only when it has a genuine analytic
-            # Hessian for this method, so supports() is the truthful capability
-            # check: use the analytic Hessian when offered.
-            if eng.supports("<HESSIAN"):
-                # Analytic Hessian: (3N, 3N) in hartree/bohr^2.
-                return np.asarray(eng.hessian(), dtype=float).reshape(3 * n, 3 * n)
-            # Otherwise finite-difference the forces: over the warm engine,
-            # unless the evaluator runs this model chemistry as tasks.
-            if evaluator.path != "batch":
-                return self._fd_hessian(eng, coords_ang, n)
-        return self._fd_hessian_tasks(evaluator, configuration, coords_ang)
-
-    def _code_is_here(self, step):
-        """Whether the program is installed where this step runs: its
-        ``get_executor_config`` finds it (ORCA's raises when it cannot)."""
-        check = getattr(step, "get_executor_config", None)
-        if check is None:
-            return True
-        try:
-            check(self.flowchart.executor, self.global_options)
-        except Exception:
-            return False
-        return True
-
-    def _fd_hessian_tasks(self, evaluator, configuration, coords_ang, delta_bohr=0.01):
-        """Central-difference Hessian (hartree/bohr^2) from the gradients of the
-        6N displaced structures, computed together as tasks (concurrently, or on
-        the job's queue; a rerun keeps the finished ones)."""
-        from seamm_exec import Geometry
-
-        elements = list(configuration.atoms.atomic_numbers)
-        x0 = np.asarray(coords_ang, dtype=float).reshape(-1)
-        delta = Q_(delta_bohr, "bohr").m_as("Å")
-        ndof = x0.size
-        prefix = f"c{getattr(configuration, 'id', 0)}-fd"
-        for j in range(ndof):
-            for sign, tag in ((1.0, "p"), (-1.0, "m")):
-                x = x0.copy()
-                x[j] += sign * delta
-                evaluator.submit(
-                    Geometry(
-                        elements,
-                        x.reshape(-1, 3),
-                        configuration.charge,
-                        configuration.spin_multiplicity,
-                    ),
-                    key=f"{prefix}{j:04d}{tag}",
-                )
-        gradients = {}
-        for result in evaluator.results():
-            if not result.ok:
-                raise RuntimeError(
-                    f"A displaced structure for the Hessian failed ({result.key}): "
-                    f"{result.reason}"
-                )
-            gradients[result.key] = (
-                Q_(np.asarray(result.gradients, dtype=float), "kJ/mol/Å")
-                .m_as("hartree/bohr")
-                .reshape(-1)
-            )
-        H = np.zeros((ndof, ndof))
-        for j in range(ndof):
-            gp = gradients[f"{prefix}{j:04d}p"]
-            gm = gradients[f"{prefix}{j:04d}m"]
-            H[:, j] = (gp - gm) / (2.0 * delta_bohr)
-        return 0.5 * (H + H.T)
-
-    def _fd_hessian(self, engine, coords_ang, n_atoms, delta_bohr=0.01):
-        """Central-difference Hessian (hartree/bohr^2) from MDI forces."""
-        x0 = Q_(coords_ang, "Å").m_as("bohr").reshape(-1)
-        ndof = 3 * n_atoms
-        H = np.zeros((ndof, ndof))
-        for j in range(ndof):
-            xp = x0.copy()
-            xp[j] += delta_bohr
-            engine.set_coordinates(xp, units="bohr")
-            fp = np.asarray(engine.forces(units="hartree/bohr"), dtype=float).reshape(
-                -1
-            )
-
-            xm = x0.copy()
-            xm[j] -= delta_bohr
-            engine.set_coordinates(xm, units="bohr")
-            fm = np.asarray(engine.forces(units="hartree/bohr"), dtype=float).reshape(
-                -1
-            )
-
-            # Force = -dE/dx, so d^2E/dx_i dx_j = -(f_i(+) - f_i(-)) / 2 delta.
-            H[:, j] = -(fp - fm) / (2.0 * delta_bohr)
-        return 0.5 * (H + H.T)
-
-    # ------------------------------------------------------------------ #
-    # Input selection, naming, and small parameter helpers
-    # ------------------------------------------------------------------ #
     def _reference_pool(self, P, system_db):
         """Resolve the 'structure' parameters to a list of configurations."""
         spec = P["structure"]
