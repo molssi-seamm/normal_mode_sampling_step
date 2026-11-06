@@ -1,5 +1,5 @@
 seamm
-seamm-exec>=2026.10.3
+seamm-exec>=2026.11.5
 seamm-mdi
 seamm-util
 seamm-widgets

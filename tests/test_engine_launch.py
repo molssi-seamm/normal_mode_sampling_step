@@ -34,6 +34,9 @@ class _Engine:
     def supports(self, command):
         return True
 
+    def energy(self, units=None):
+        return 0.0
+
     def hessian(self):
         return np.eye(3 * self.n)
 
@@ -107,7 +110,7 @@ def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
         def __init__(self):
             self.submitted = {}
 
-        def submit(self, geometry, key):
+        def submit(self, geometry, key, options=None):
             self.submitted[key] = geometry
             return key
 
@@ -127,16 +130,21 @@ def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
         spin_multiplicity=1,
         atoms=types.SimpleNamespace(atomic_numbers=[1, 1]),
     )
-    me = types.SimpleNamespace()
+    from seamm_exec.hessian import HessianDriver
+
+    driver = HessianDriver(types.SimpleNamespace(indent="", title="NMS"))
     evaluator = FakeEvaluator()
-    H = nms.NormalModeSampling._fd_hessian_tasks(
-        me, evaluator, configuration, np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.74]])
+    _, H, how = driver.fd_hessian_tasks(
+        evaluator, configuration, np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.74]])
     )
-    assert len(evaluator.submitted) == 12  # 6N displacements, N = 2
+    # 6N displacements (N = 2) and the reference, for its energy
+    assert len(evaluator.submitted) == 13
     assert np.allclose(H, K, atol=1e-8)
 
 
 def _me_and_configuration(mc, step, target=None):
+    """A stand-in step and configuration; the shared driver's task finite
+    difference is replaced by a recorder (set ``.monkeypatch`` first)."""
     me = types.SimpleNamespace(
         variable_exists=lambda name: True,
         get_variable=lambda name: mc,
@@ -148,14 +156,17 @@ def _me_and_configuration(mc, step, target=None):
             plugin_manager=types.SimpleNamespace(get=lambda name: step),
         ),
     )
-    me._code_is_here = lambda step: nms.NormalModeSampling._code_is_here(me, step)
     called = {}
 
-    def fd_tasks(evaluator, configuration, coords):
+    def fd_tasks(driver, evaluator, configuration, coords, delta_bohr=0.01):
         called["fd tasks"] = evaluator.target
-        return np.eye(3)
+        return 0.0, np.eye(3), "finite differences as tasks"
 
-    me._fd_hessian_tasks = fd_tasks
+    import seamm_exec.hessian
+
+    _me_and_configuration.monkeypatch.setattr(
+        seamm_exec.hessian.HessianDriver, "fd_hessian_tasks", fd_tasks
+    )
     configuration = types.SimpleNamespace(
         periodicity=0,
         charge=0,
@@ -203,6 +214,7 @@ def test_no_code_here_means_finite_differences_as_tasks(monkeypatch):
     monkeypatch.setattr(
         nms.printer, "important", lambda text: printed.append(str(text))
     )
+    _me_and_configuration.monkeypatch = monkeypatch
     me, configuration, called = _me_and_configuration(_MC, _NotHere())
     H = nms.NormalModeSampling._hessian(me, configuration)
     assert "fd tasks" in called and H.shape == (3, 3)
@@ -225,6 +237,7 @@ def test_a_queue_target_wins(monkeypatch, tmp_path):
         name="arc", transport="ssh", host="tc", type="local", tasks="queue"
     )
     monkeypatch.setattr(seamm_exec.targets, "find_target", lambda *a, **k: section)
+    _me_and_configuration.monkeypatch = monkeypatch
     me, configuration, called = _me_and_configuration(_MC, _TaskProvider())
     nms.NormalModeSampling._hessian(me, configuration)
     assert called["fd tasks"] is section
@@ -252,6 +265,7 @@ def test_a_transient_engine_failure_is_not_hidden(monkeypatch):
         def get_executor_config(executor, options):
             return {"code": "/opt/orca/orca"}
 
+    _me_and_configuration.monkeypatch = monkeypatch
     me, configuration, called = _me_and_configuration(_MC, _Here())
     with pytest.raises(RuntimeError, match="port in use"):
         nms.NormalModeSampling._hessian(me, configuration)

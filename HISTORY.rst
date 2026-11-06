@@ -1,6 +1,14 @@
 =======
 History
 =======
+2026.11.5 -- The Hessian from the shared driver, with the engine's environment and cores
+    * The Hessian now comes from the code the Thermochemistry and Vibrational Analysis
+      steps share (seamm_exec 2026.11.5), with the same routes as before.
+    * The MDI engine now runs with the program's own environment -- the modules it is
+      installed with, ORCA's MPI runtime -- and on the job's cores, as the
+      Thermochemistry step's did. A module-installed ORCA could not start its engine
+      here before.
+
 2026.10.3.1 -- The finite-difference Hessian as separate calculations, on this machine or a cluster
     * When the job's calculations go to a cluster queue and the program can run
       separate calculations (ORCA, MOPAC), the Hessian is the finite difference of the
