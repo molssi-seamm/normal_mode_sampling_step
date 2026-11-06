@@ -110,7 +110,7 @@ def test_fd_hessian_tasks_reproduces_a_quadratic_potential():
         def __init__(self):
             self.submitted = {}
 
-        def submit(self, geometry, key):
+        def submit(self, geometry, key, options=None):
             self.submitted[key] = geometry
             return key
 

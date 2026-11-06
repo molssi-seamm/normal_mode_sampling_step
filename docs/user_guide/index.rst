@@ -39,6 +39,10 @@ model chemistry offers:
 Separate calculations are kept in ``tasks/`` in the step's directory, and a rerun of the
 job in the same directory reuses the finished ones.
 
+The routes are those of the Thermochemistry and Vibrational Analysis steps, which share
+the same code. The MDI engine runs with the program's own environment (for example the
+modules it is installed with, or ORCA's MPI runtime) and on the cores the job has.
+
 For HF/def2-SVP water the analytic and finite-difference Hessians agree to better than 1 cm⁻¹ in the frequencies.
 
 Indices and tables
