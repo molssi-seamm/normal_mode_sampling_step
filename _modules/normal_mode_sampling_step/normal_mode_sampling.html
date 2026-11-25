@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.5 documentation</title>
+    <title>normal_mode_sampling_step.normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.25 documentation</title>
   
   
   
@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
@@ -39,12 +39,12 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=e86bfd1c"></script>
+    <script src="../../_static/documentation_options.js?v=d2c0d6cc"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/normal_mode_sampling_step/normal_mode_sampling';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.11.5" />
+  <meta name="docsearch:version" content="2026.11.25" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -665,17 +665,109 @@
 <span class="w">    </span><span class="sd">"""Variance of the normal coordinate (mass-weighted, SI: kg m^2).</span>
 
 <span class="sd">    ``omega`` is the angular frequency (1/s). ``distribution`` is one of</span>
-<span class="sd">    ``wigner``, ``classical``, ``ground``.</span>
+<span class="sd">    ``wigner``, ``classical``, ``ground`` or ``energy``. For ``energy`` (the</span>
+<span class="sd">    energy-targeted distribution) only the shape matters, since each draw is</span>
+<span class="sd">    scaled to its target energy afterwards: the classical (equipartition) shape,</span>
+<span class="sd">    sigma proportional to 1/omega, the same expected energy in every mode.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"classical"</span><span class="p">:</span>
         <span class="c1"># &lt;Q^2&gt; = kT / omega^2 for a unit-mass harmonic oscillator.</span>
         <span class="k">return</span> <span class="n">_KB_J_K</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">/</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">zpe_var</span> <span class="o">=</span> <span class="n">_HBAR_J_S</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">omega</span><span class="p">)</span>  <span class="c1"># ground-state (T -&gt; 0) width</span>
     <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"ground"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">zpe_var</span>
     <span class="c1"># Wigner (quantum) width at finite T.</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">_HBAR_J_S</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">_KB_J_K</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">zpe_var</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_angles_of</span><span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The bond angles (i, j, k), j the centre, of a list of bonds (i, j)."""</span>
+    <span class="n">neighbours</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">bonds</span><span class="p">:</span>
+        <span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">neighbours</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">):</span>
+        <span class="n">nb</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">neighbours</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nb</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nb</span><span class="p">)):</span>
+                <span class="n">angles</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">nb</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">j</span><span class="p">,</span> <span class="n">nb</span><span class="p">[</span><span class="n">b</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">angles</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_angle_deg</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)))</span>
+
+
+<div class="viewcode-block" id="geometry_guard">
+<a class="viewcode-back" href="../../api/normal_mode_sampling_step.html#normal_mode_sampling_step.normal_mode_sampling.geometry_guard">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">geometry_guard</span><span class="p">(</span>
+    <span class="n">coords_ang</span><span class="p">,</span>
+    <span class="n">bonds</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">max_displacement</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_bond_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_angle_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A test of displaced geometries against limits on how far they move.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    coords_ang : (N, 3) array</span>
+<span class="sd">        The reference coordinates (Angstrom).</span>
+<span class="sd">    bonds : sequence of (i, j)</span>
+<span class="sd">        The bonds (0-based) whose lengths, and the angles between them, are</span>
+<span class="sd">        checked.</span>
+<span class="sd">    max_displacement : float or None</span>
+<span class="sd">        The largest distance any atom may move (Angstrom).</span>
+<span class="sd">    max_bond_change : float or None</span>
+<span class="sd">        The largest change of any bond length (Angstrom).</span>
+<span class="sd">    max_angle_change : float or None</span>
+<span class="sd">        The largest change of any bond angle (degrees).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable or None</span>
+<span class="sd">        ``guard(dx)`` -&gt; None if the displacement ``dx`` (N, 3) passes, else</span>
+<span class="sd">        the reason, as text; None when no limit is set.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">max_displacement</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">max_bond_change</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="p">(</span><span class="n">max_angle_change</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coords_ang</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">bonds</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">bonds</span><span class="p">]</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="p">{</span><span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x0</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bonds</span><span class="p">}</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="n">_angles_of</span><span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span> <span class="k">if</span> <span class="n">max_angle_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">a0</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="n">_angle_deg</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">guard</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_displacement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">max_displacement</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"an atom moved </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> Å"</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">dx</span>
+        <span class="k">if</span> <span class="n">max_bond_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r0</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">max_bond_change</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">"a bond changed by </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> Å"</span>
+        <span class="k">if</span> <span class="n">max_angle_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">a0</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">_angle_deg</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">max_angle_change</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">"an angle changed by </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">°"</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">guard</span></div>
+
 
 
 <div class="viewcode-block" id="sample_normal_modes">
@@ -690,6 +782,9 @@
     <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span>
     <span class="n">amplitude_cap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">energy_ceiling</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">energy_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">guard</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_draws</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">max_tries_factor</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
 <span class="p">):</span>
@@ -704,15 +799,29 @@
 <span class="sd">    masses_amu : (N,) array</span>
 <span class="sd">        Atomic masses (amu).</span>
 <span class="sd">    n_samples : int</span>
-<span class="sd">        Number of accepted geometries to return.</span>
-<span class="sd">    distribution : {"wigner", "classical", "ground"}</span>
+<span class="sd">        Number of geometries requested.</span>
+<span class="sd">    distribution : {"wigner", "classical", "ground", "energy"}</span>
+<span class="sd">        "energy" is energy-targeted sampling: the equipartition shape (sigma</span>
+<span class="sd">        proportional to 1/omega), each draw then scaled so that its harmonic</span>
+<span class="sd">        energy is a target drawn uniformly from ``energy_range``. A sample keeps</span>
+<span class="sd">        its target through redraws after guard failures.</span>
 <span class="sd">    temperature : float</span>
-<span class="sd">        Temperature (K); ignored for the ground-state distribution.</span>
+<span class="sd">        Temperature (K); used only by the Wigner and classical distributions.</span>
 <span class="sd">    amplitude_cap : float or None</span>
-<span class="sd">        Clamp each normal-coordinate draw to this many standard deviations.</span>
+<span class="sd">        Clamp each normal-coordinate draw to this many standard deviations (for</span>
+<span class="sd">        "energy", applied to the shape before the scaling).</span>
 <span class="sd">    energy_ceiling : float or None</span>
 <span class="sd">        Reject (and redraw) samples whose harmonic energy above the reference</span>
 <span class="sd">        (kJ/mol) exceeds this.</span>
+<span class="sd">    energy_range : (float, float) or None</span>
+<span class="sd">        The range (kJ/mol) of the target energies, for "energy".</span>
+<span class="sd">    guard : callable or None</span>
+<span class="sd">        ``guard(dx)`` -&gt; None to accept the Cartesian displacement dx (N, 3,</span>
+<span class="sd">        Angstrom), or the reason to redraw (see :func:`geometry_guard`).</span>
+<span class="sd">    max_draws : int or None</span>
+<span class="sd">        With a guard: the most draws for one sample. When all of them fail the</span>
+<span class="sd">        guard, that sample is dropped. None: redraw until accepted (bounded by</span>
+<span class="sd">        ``max_tries_factor``).</span>
 <span class="sd">    rng : numpy.random.Generator or None</span>
 <span class="sd">    max_tries_factor : int</span>
 <span class="sd">        Safety bound on redraws (per requested sample) before giving up.</span>
@@ -727,10 +836,21 @@
 <span class="sd">        The normal-coordinate displacement per sampled mode for each accepted</span>
 <span class="sd">        sample, in amu^1/2 Angstrom (same mode order as ``frequencies_cm``).</span>
 <span class="sd">    n_rejected : int</span>
-<span class="sd">        Number of draws rejected by the energy ceiling.</span>
+<span class="sd">        Number of draws rejected by the energy ceiling or the guard.</span>
+<span class="sd">    n_dropped : int</span>
+<span class="sd">        Number of samples dropped because every one of their ``max_draws``</span>
+<span class="sd">        draws failed the guard.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">energy_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Energy-targeted sampling needs an energy range."</span><span class="p">)</span>
+        <span class="n">e_low</span><span class="p">,</span> <span class="n">e_high</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">energy_range</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">e_low</span> <span class="o">&lt;=</span> <span class="n">e_high</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The target energies must satisfy 0 &lt; low &lt;= high: </span><span class="si">{</span><span class="n">energy_range</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
 
     <span class="n">freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequencies_cm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">modes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modes_mw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -740,26 +860,39 @@
     <span class="n">omega</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">_C_CM_S</span> <span class="o">*</span> <span class="n">freqs</span>  <span class="c1"># angular frequency, 1/s</span>
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_sigma_squared</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">omega</span><span class="p">])</span>
-    <span class="p">)</span>  <span class="c1"># sqrt(kg) m, per mode</span>
+    <span class="p">)</span>  <span class="c1"># sqrt(kg) m, per mode (for "energy", the shape only)</span>
 
     <span class="n">inv_sqrt_m3</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">_AMU_KG</span><span class="p">)</span>  <span class="c1"># 1/sqrt(kg)</span>
+    <span class="n">to_kJ</span> <span class="o">=</span> <span class="n">_N_AVOGADRO</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># J per molecule -&gt; kJ/mol</span>
 
     <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">energies_kJ</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">q_vectors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">n_rejected</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n_dropped</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">max_tries</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_tries_factor</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
     <span class="n">tries</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_samples</span> <span class="ow">and</span> <span class="n">tries</span> <span class="o">&lt;</span> <span class="n">max_tries</span><span class="p">:</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># draws for the current sample</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_dropped</span> <span class="o">&lt;</span> <span class="n">n_samples</span> <span class="ow">and</span> <span class="n">tries</span> <span class="o">&lt;</span> <span class="n">max_tries</span><span class="p">:</span>
         <span class="n">tries</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">draws</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n_modes</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span>  <span class="c1"># normal coords, sqrt(kg) m</span>
         <span class="k">if</span> <span class="n">amplitude_cap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="o">-</span><span class="n">amplitude_cap</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">amplitude_cap</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">)</span>
 
         <span class="c1"># Harmonic energy E = 1/2 sum omega^2 q^2 (unit mass), J -&gt; kJ/mol.</span>
-        <span class="n">energy_kJ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">_N_AVOGADRO</span> <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="n">energy_kJ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">to_kJ</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+            <span class="c1"># One target per sample: a redraw after a guard failure draws a new</span>
+            <span class="c1"># shape at the same target, so the guards do not bias the accepted</span>
+            <span class="c1"># energies toward the bottom of the range.</span>
+            <span class="k">if</span> <span class="n">draws</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">e_low</span><span class="p">,</span> <span class="n">e_high</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target</span> <span class="o">/</span> <span class="n">energy_kJ</span><span class="p">)</span>
+            <span class="n">energy_kJ</span> <span class="o">=</span> <span class="n">target</span>
         <span class="k">if</span> <span class="n">energy_ceiling</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">energy_kJ</span> <span class="o">&gt;</span> <span class="n">energy_ceiling</span><span class="p">:</span>
             <span class="n">n_rejected</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">draws</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># a fresh draw, with a new target</span>
             <span class="k">continue</span>
 
         <span class="c1"># Mass-weighted Cartesian displacement, then de-weight to metres -&gt; Ang.</span>
@@ -767,11 +900,19 @@
         <span class="n">dx_m</span> <span class="o">=</span> <span class="n">dxi</span> <span class="o">*</span> <span class="n">inv_sqrt_m3</span>  <span class="c1"># (3N,), m</span>
         <span class="n">dx_ang</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx_m</span> <span class="o">/</span> <span class="mf">1.0e-10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">guard</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">guard</span><span class="p">(</span><span class="n">dx_ang</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_rejected</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">max_draws</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">draws</span> <span class="o">&gt;=</span> <span class="n">max_draws</span><span class="p">:</span>
+                <span class="n">n_dropped</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">draws</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">continue</span>
+
+        <span class="n">draws</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">displacements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dx_ang</span><span class="p">)</span>
-        <span class="n">energies_kJ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy_kJ</span><span class="p">)</span>
+        <span class="n">energies_kJ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">energy_kJ</span><span class="p">))</span>
         <span class="n">q_vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="n">_Q_SI_TO_AMU_HALF_ANG</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">energies_kJ</span><span class="p">,</span> <span class="n">q_vectors</span><span class="p">,</span> <span class="n">n_rejected</span></div>
+    <span class="k">return</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">energies_kJ</span><span class="p">,</span> <span class="n">q_vectors</span><span class="p">,</span> <span class="n">n_rejected</span><span class="p">,</span> <span class="n">n_dropped</span></div>
 
 
 
@@ -832,19 +973,73 @@
 
         <span class="n">distribution</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"distribution"</span><span class="p">]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"ground"</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="s2">"0 K (zero-point motion only)"</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"in proportion to the modes"</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'samples per mode'</span><span class="p">]</span><span class="si">}</span><span class="s2"> displaced geometries per sampled mode "</span>
+                <span class="sa">f</span><span class="s2">"(at least </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'minimum number of samples'</span><span class="p">]</span><span class="si">}</span><span class="s2">, at most "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum number of samples'</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> displaced geometr"</span> <span class="o">+</span> <span class="p">(</span><span class="s2">"y"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span> <span class="k">else</span> <span class="s2">"ies"</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distribution_key</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+            <span class="n">how</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"with the equipartition shape, each scaled to a harmonic energy "</span>
+                <span class="sa">f</span><span class="s2">"drawn uniformly between </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'minimum target energy'</span><span class="p">]</span><span class="si">}</span><span class="s2"> and "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum target energy'</span><span class="p">]</span><span class="si">}</span><span class="s2"> above the reference"</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"ground"</span><span class="p">:</span>
+            <span class="n">how</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"from the '</span><span class="si">{</span><span class="n">distribution</span><span class="si">}</span><span class="s2">' normal-mode distribution at 0 K "</span>
+                <span class="s2">"(zero-point motion only)"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">how</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"from the '</span><span class="si">{</span><span class="n">distribution</span><span class="si">}</span><span class="s2">' normal-mode distribution at "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'temperature'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
 
         <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Sampling </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> displaced geometr"</span>
-            <span class="o">+</span> <span class="p">(</span><span class="s2">"y"</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span> <span class="k">else</span> <span class="s2">"ies"</span><span class="p">)</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">" per reference structure from the '</span><span class="si">{</span><span class="n">distribution</span><span class="si">}</span><span class="s2">' normal-mode "</span>
-            <span class="sa">f</span><span class="s2">"distribution at </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">, using the Hessian from the model chemistry "</span>
-            <span class="s2">"defined earlier in the flowchart. Translational, rotational, and "</span>
-            <span class="s2">"imaginary modes are excluded. The structures are written to the "</span>
-            <span class="sa">f</span><span class="s2">"system '</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'system name'</span><span class="p">]</span><span class="si">}</span><span class="s2">' for downstream single-point evaluation."</span>
+            <span class="sa">f</span><span class="s2">"Sampling </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> per reference structure </span><span class="si">{</span><span class="n">how</span><span class="si">}</span><span class="s2">, using the Hessian "</span>
+            <span class="s2">"from the model chemistry defined earlier in the flowchart. "</span>
+            <span class="s2">"Translational, rotational, and imaginary modes are excluded"</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"lowest frequency"</span><span class="p">]):</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">", as are modes below </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'lowest frequency'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">"."</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"no atom moves more than </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum atom displacement'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum atom displacement"</span><span class="p">])</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"no bond changes by more than </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum bond change'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum bond change"</span><span class="p">])</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"no bond angle changes by more than </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum angle change'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum angle change"</span><span class="p">])</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">limits</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">limits</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum draws"</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"no limit"</span><span class="p">:</span>
+                <span class="n">tries</span> <span class="o">=</span> <span class="s2">"redrawn until it passes"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tries</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"redrawn up to </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'maximum draws'</span><span class="p">]</span><span class="si">}</span><span class="s2"> times in all, then dropped"</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="s2">" A sample is accepted only if "</span>
+                <span class="o">+</span> <span class="p">(</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">limits</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">" and "</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">limits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">""</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">limits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">"; otherwise it is </span><span class="si">{</span><span class="n">tries</span><span class="si">}</span><span class="s2">."</span>
+            <span class="p">)</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">" The structures are written to the system '</span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'system name'</span><span class="p">]</span><span class="si">}</span><span class="s2">' for "</span>
+            <span class="s2">"downstream single-point evaluation."</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
@@ -866,9 +1061,34 @@
         <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">system_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">"_system_db"</span><span class="p">)</span>
-        <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rng</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"random seed"</span><span class="p">])</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_of</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"random seed"</span><span class="p">])</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="n">distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distribution_key</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"distribution"</span><span class="p">])</span>
+        <span class="n">energy_range</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
+            <span class="n">energy_range</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"minimum target energy"</span><span class="p">],</span> <span class="s2">"kJ/mol"</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum target energy"</span><span class="p">],</span> <span class="s2">"kJ/mol"</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="n">lowest</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"lowest frequency"</span><span class="p">])</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"lowest frequency"</span><span class="p">],</span> <span class="s2">"1/cm"</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">units</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">units</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s2">"maximum atom displacement"</span><span class="p">,</span> <span class="s2">"Å"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"maximum bond change"</span><span class="p">,</span> <span class="s2">"Å"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"maximum angle change"</span><span class="p">,</span> <span class="s2">"degree"</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">max_draws</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum draws"</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"no limit"</span>
+            <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum draws"</span><span class="p">])</span>
+        <span class="p">)</span>
         <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">],</span> <span class="s2">"K"</span><span class="p">)</span>
         <span class="n">cap</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"amplitude cap"</span><span class="p">])</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"amplitude cap"</span><span class="p">])</span>
         <span class="n">ceiling</span> <span class="o">=</span> <span class="p">(</span>
@@ -876,6 +1096,17 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_none</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"energy ceiling"</span><span class="p">])</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"energy ceiling"</span><span class="p">],</span> <span class="s2">"kJ/mol"</span><span class="p">)</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s2">"energy"</span> <span class="ow">and</span> <span class="n">ceiling</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The targets set every sample's energy, so a ceiling has no meaning;</span>
+            <span class="c1"># the GUI hides it, but a hand-edited flowchart may still carry one.</span>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span>
+                <span class="n">__</span><span class="p">(</span>
+                    <span class="s2">"The energy ceiling is ignored for energy-targeted sampling: "</span>
+                    <span class="s2">"the target energies set each sample's energy."</span><span class="p">,</span>
+                    <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">ceiling</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">references</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_pool</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">system_db</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">references</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -890,6 +1121,7 @@
 
         <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">n_rejected_total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n_dropped_total</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">first_freqs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">first_zpe</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">first_counts</span> <span class="o">=</span> <span class="kc">None</span>
@@ -925,6 +1157,8 @@
             <span class="n">vib_modes</span> <span class="o">=</span> <span class="n">modes_mw</span><span class="p">[:,</span> <span class="n">vibrational</span><span class="p">]</span>
 
             <span class="n">keep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_mode_selection</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"modes"</span><span class="p">],</span> <span class="n">vib_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lowest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">keep</span> <span class="o">&amp;=</span> <span class="n">vib_freqs</span> <span class="o">&gt;=</span> <span class="n">lowest</span>
             <span class="n">sel_freqs</span> <span class="o">=</span> <span class="n">vib_freqs</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
             <span class="n">sel_modes</span> <span class="o">=</span> <span class="n">vib_modes</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">sel_freqs</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -933,18 +1167,38 @@
                     <span class="s2">"after applying the mode selection."</span>
                 <span class="p">)</span>
 
-            <span class="n">displacements</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">q_vectors</span><span class="p">,</span> <span class="n">n_rejected</span> <span class="o">=</span> <span class="n">sample_normal_modes</span><span class="p">(</span>
+            <span class="n">guard</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">limits</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="n">guard</span> <span class="o">=</span> <span class="n">geometry_guard</span><span class="p">(</span>
+                    <span class="n">coords</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_bonds_of</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span>
+                    <span class="n">max_displacement</span><span class="o">=</span><span class="n">limits</span><span class="p">[</span><span class="s2">"maximum atom displacement"</span><span class="p">],</span>
+                    <span class="n">max_bond_change</span><span class="o">=</span><span class="n">limits</span><span class="p">[</span><span class="s2">"maximum bond change"</span><span class="p">],</span>
+                    <span class="n">max_angle_change</span><span class="o">=</span><span class="n">limits</span><span class="p">[</span><span class="s2">"maximum angle change"</span><span class="p">],</span>
+                <span class="p">)</span>
+
+            <span class="p">(</span>
+                <span class="n">displacements</span><span class="p">,</span>
+                <span class="n">energies</span><span class="p">,</span>
+                <span class="n">q_vectors</span><span class="p">,</span>
+                <span class="n">n_rejected</span><span class="p">,</span>
+                <span class="n">n_dropped</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">sample_normal_modes</span><span class="p">(</span>
                 <span class="n">sel_freqs</span><span class="p">,</span>
                 <span class="n">sel_modes</span><span class="p">,</span>
                 <span class="n">masses</span><span class="p">,</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_samples</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">sel_freqs</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
                 <span class="n">distribution</span><span class="o">=</span><span class="n">distribution</span><span class="p">,</span>
                 <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
                 <span class="n">amplitude_cap</span><span class="o">=</span><span class="n">cap</span><span class="p">,</span>
                 <span class="n">energy_ceiling</span><span class="o">=</span><span class="n">ceiling</span><span class="p">,</span>
+                <span class="n">energy_range</span><span class="o">=</span><span class="n">energy_range</span><span class="p">,</span>
+                <span class="n">guard</span><span class="o">=</span><span class="n">guard</span><span class="p">,</span>
+                <span class="n">max_draws</span><span class="o">=</span><span class="n">max_draws</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">n_rejected_total</span> <span class="o">+=</span> <span class="n">n_rejected</span>
+            <span class="n">n_dropped_total</span> <span class="o">+=</span> <span class="n">n_dropped</span>
             <span class="n">energies_all</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">displacements</span><span class="p">):</span>
@@ -983,7 +1237,7 @@
 
         <span class="c1"># Cite the method. The plug-in's own reference is added by the base class,</span>
         <span class="c1"># which has already loaded data/references.bib into self._bibliography.</span>
-        <span class="k">if</span> <span class="s2">"wigner1932"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">distribution</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"wigner"</span><span class="p">,</span> <span class="s2">"ground"</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"wigner1932"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="o">.</span><span class="n">cite</span><span class="p">(</span>
                 <span class="n">raw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bibliography</span><span class="p">[</span><span class="s2">"wigner1932"</span><span class="p">],</span>
                 <span class="n">alias</span><span class="o">=</span><span class="s2">"wigner1932"</span><span class="p">,</span>
@@ -996,6 +1250,8 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"number of samples"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
             <span class="s2">"number of rejected samples"</span><span class="p">:</span> <span class="n">n_rejected_total</span><span class="p">,</span>
+            <span class="s2">"number of dropped samples"</span><span class="p">:</span> <span class="n">n_dropped_total</span><span class="p">,</span>
+            <span class="s2">"random seed"</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">first_freqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">"frequencies"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">first_freqs</span><span class="p">]</span>
@@ -1109,6 +1365,53 @@
             <span class="n">properties</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_type</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">units</span><span class="p">,</span> <span class="n">noerror</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">properties</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_seed_of</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The integer seed: the given one, or a fresh one for 'random', so that</span>
+<span class="sd">        the ensemble can be reproduced from the recorded seed."""</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"random"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">SeedSequence</span><span class="p">()</span><span class="o">.</span><span class="n">entropy</span> <span class="o">%</span> <span class="mi">2</span><span class="o">**</span><span class="mi">63</span><span class="p">)</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_number_of_samples</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">n_modes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The number of samples for a reference with n_modes sampled modes."""</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"in proportion to the modes"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">wanted</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"samples per mode"</span><span class="p">])</span> <span class="o">*</span> <span class="n">n_modes</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">))</span>
+        <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"minimum number of samples"</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">P</span><span class="p">[</span><span class="s2">"maximum number of samples"</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">high</span><span class="p">,</span> <span class="n">wanted</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_bonds_of</span><span class="p">(</span><span class="n">configuration</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The bonds (0-based index pairs) of a configuration: its bond table,</span>
+<span class="sd">        or, when it has none, bonds perceived from the distances (covalent</span>
+<span class="sd">        radii x 1.3, RDKit's radii)."""</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">{</span><span class="n">aid</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">aid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ids</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">n_bonds</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">get_as_dict</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">index</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"i"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"j"</span><span class="p">])]</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">rdkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chem</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">GetPeriodicTable</span><span class="p">()</span>
+        <span class="n">symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">table</span><span class="o">.</span><span class="n">GetRcovalent</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">symbols</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">(</span><span class="n">fractionals</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span>
+        <span class="n">bonds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">symbols</span><span class="p">)):</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">bonds</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">bonds</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">seed</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"random"</span><span class="p">:</span>
@@ -1119,6 +1422,8 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_distribution_key</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">"energy"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"energy"</span>
         <span class="k">if</span> <span class="s2">"classical"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">"classical"</span>
         <span class="k">if</span> <span class="s2">"ground"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
@@ -1189,12 +1494,22 @@
                 <span class="sa">f</span><span class="s2">"(maximum </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'maximum harmonic energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> kJ/mol)"</span>
                 <span class="o">+</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"; </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of rejected samples'</span><span class="p">]</span><span class="si">}</span><span class="s2"> draws were rejected "</span>
-                    <span class="s2">"by the energy ceiling."</span>
+                    <span class="s2">"by the energy ceiling or the limits on the geometry."</span>
                     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"number of rejected samples"</span><span class="p">)</span>
                     <span class="k">else</span> <span class="s2">"."</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"number of dropped samples"</span><span class="p">):</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'number of dropped samples'</span><span class="p">]</span><span class="si">}</span><span class="s2"> samples were dropped because "</span>
+                <span class="s2">"every draw moved the structure more than the limits allow."</span>
+            <span class="p">)</span>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">"random seed"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span>
+                <span class="n">__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The random seed was </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'random seed'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span></div>
 </div>
 

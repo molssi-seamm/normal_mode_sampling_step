@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>normal_mode_sampling_step.normal_mode_sampling_parameters &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.5 documentation</title>
+    <title>normal_mode_sampling_step.normal_mode_sampling_parameters &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.25 documentation</title>
   
   
   
@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
@@ -39,12 +39,12 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=e86bfd1c"></script>
+    <script src="../../_static/documentation_options.js?v=d2c0d6cc"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/normal_mode_sampling_step/normal_mode_sampling_parameters';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.11.5" />
+  <meta name="docsearch:version" content="2026.11.25" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -580,12 +580,45 @@
             <span class="s2">"default"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
             <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
             <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
-            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"in proportion to the modes"</span><span class="p">,),</span>
             <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
             <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Number of samples:"</span><span class="p">,</span>
             <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">"How many displaced geometries to generate per reference "</span> <span class="s2">"structure."</span>
+                <span class="s2">"How many displaced geometries to generate per reference "</span>
+                <span class="s2">"structure: a number, or 'in proportion to the modes' for the "</span>
+                <span class="s2">"number of sampled modes times 'samples per mode', kept between "</span>
+                <span class="s2">"the minimum and maximum below."</span>
             <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"samples per mode"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Samples per mode:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"With 'in proportion to the modes': the number of samples per "</span>
+                <span class="s2">"sampled vibrational mode, rounded."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"minimum number of samples"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"At least:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"With 'in proportion to the modes': the fewest samples."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum number of samples"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"At most:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"With 'in proportion to the modes': the most samples."</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="s2">"distribution"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"Wigner (quantum)"</span><span class="p">,</span>
@@ -595,6 +628,7 @@
                 <span class="s2">"Wigner (quantum)"</span><span class="p">,</span>
                 <span class="s2">"classical (thermal)"</span><span class="p">,</span>
                 <span class="s2">"ground state (0 K)"</span><span class="p">,</span>
+                <span class="s2">"energy-targeted (equipartition)"</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
             <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Amplitude distribution:"</span><span class="p">,</span>
@@ -605,7 +639,37 @@
                 <span class="s2">"the zero-point spread of stiff modes that classical sampling "</span>
                 <span class="s2">"misses. 'classical (thermal)' uses the Boltzmann width "</span>
                 <span class="s2">"sigma^2 = kT / omega^2. 'ground state (0 K)' is the Wigner "</span>
-                <span class="s2">"distribution at T=0, i.e. pure zero-point motion."</span>
+                <span class="s2">"distribution at T=0, i.e. pure zero-point motion. "</span>
+                <span class="s2">"'energy-targeted (equipartition)' draws the classical shape "</span>
+                <span class="s2">"(the same expected energy in every mode, sigma proportional to "</span>
+                <span class="s2">"1/omega) and scales each draw so that its harmonic energy is a "</span>
+                <span class="s2">"target drawn uniformly between the minimum and maximum target "</span>
+                <span class="s2">"energies: every sample lies in a chosen energy window, whatever "</span>
+                <span class="s2">"the size of the molecule, and no temperature enters."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"minimum target energy"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"kcal/mol"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Target energies from:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"For energy-targeted sampling: the lowest harmonic energy above "</span>
+                <span class="s2">"the reference that a sample is scaled to."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum target energy"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"kcal/mol"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"to:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"For energy-targeted sampling: the highest harmonic energy above "</span>
+                <span class="s2">"the reference that a sample is scaled to."</span>
             <span class="p">),</span>
         <span class="p">},</span>
         <span class="s2">"temperature"</span><span class="p">:</span> <span class="p">{</span>
@@ -658,6 +722,70 @@
                 <span class="s2">"(e.g. '1-3, 7'). Translational, rotational, and imaginary modes "</span>
                 <span class="s2">"are always excluded, so a transition state is sampled along its "</span>
                 <span class="s2">"real modes with the reaction coordinate left alone."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"lowest frequency"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"1/cm"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".1f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Skip modes below:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Do not displace along vibrational modes with a lower frequency "</span>
+                <span class="s2">"than this, e.g. 100 cm^-1 to leave soft torsions and other "</span>
+                <span class="s2">"large-amplitude motions to a torsion scan. 'none' samples every "</span>
+                <span class="s2">"selected mode."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum atom displacement"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".3f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Largest atom displacement:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Redraw a sample in which any atom moves farther than this from "</span>
+                <span class="s2">"the reference. 'none' sets no limit."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum bond change"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".3f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Largest bond-length change:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Redraw a sample in which any bond length changes by more than "</span>
+                <span class="s2">"this. The bonds are the reference's (perceived from the "</span>
+                <span class="s2">"distances when it has none). 'none' sets no limit."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum angle change"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"degree"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".1f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Largest bond-angle change:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Redraw a sample in which any angle between two bonds changes by "</span>
+                <span class="s2">"more than this. 'none' sets no limit."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"maximum draws"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"no limit"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Draws per sample:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"With any of the limits above: how many times a sample is drawn "</span>
+                <span class="s2">"before it is dropped (and counted as dropped). 'no limit' "</span>
+                <span class="s2">"redraws until a sample passes."</span>
             <span class="p">),</span>
         <span class="p">},</span>
         <span class="s2">"random seed"</span><span class="p">:</span> <span class="p">{</span>

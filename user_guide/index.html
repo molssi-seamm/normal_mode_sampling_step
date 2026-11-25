@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.5 documentation</title>
+    <title>User Guide &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.25 documentation</title>
   
   
   
@@ -31,7 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
@@ -40,12 +40,12 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=e86bfd1c"></script>
+    <script src="../_static/documentation_options.js?v=d2c0d6cc"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/index';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.11.5" />
+  <meta name="docsearch:version" content="2026.11.25" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -538,6 +538,35 @@ the same code. The MDI engine runs with the program’s own environment (for exa
 modules it is installed with, or ORCA’s MPI runtime) and on the cores the job has.</p>
 <p>For HF/def2-SVP water the analytic and finite-difference Hessians agree to better than 1 cm⁻¹ in the frequencies.</p>
 </section>
+<section id="energy-targeted-sampling">
+<h2>Energy-targeted sampling<a class="headerlink" href="#energy-targeted-sampling" title="Link to this heading">#</a></h2>
+<p>Thermal and Wigner sampling put each sample’s energy where the temperature (or the
+zero-point motion) puts it, and that grows with the size of the molecule: a Wigner
+sample’s mean harmonic energy is about half the zero-point energy, some 14 kcal/mol
+for methane and 35 kcal/mol for a 19-atom organic molecule. For training data in a
+chosen energy window, use the <strong>energy-targeted (equipartition)</strong> distribution:</p>
+<ol class="arabic simple">
+<li><p>The shape of each sample is drawn from the classical distribution, which gives every
+mode the same expected energy (the normal-coordinate width is proportional to
+1/ω), capped at the amplitude cap.</p></li>
+<li><p>A target energy E* is drawn uniformly between the <strong>minimum</strong> and <strong>maximum target
+energy</strong>.</p></li>
+<li><p>The displacement is scaled so that its harmonic energy, ½ Σ ω² Q², is exactly E*.</p></li>
+</ol>
+<p>No temperature enters. The energy ceiling does not apply, since every sample’s energy is
+set.</p>
+<p><strong>Skip modes below</strong> leaves out the soft modes, whose large amplitudes are better
+covered by a torsion scan (100 cm⁻¹ is a common choice).</p>
+<p><strong>Limits on the geometry.</strong> A sample in which an atom moves farther than the largest
+atom displacement, or a bond length or a bond angle changes by more than its limit, is
+drawn again, keeping its target energy so that the limits do not bias the energies.
+After the given number of draws it is dropped, and the output reports how many were.
+The bonds are the structure’s own, or perceived from the distances when it has none.</p>
+<p><strong>Number of samples</strong> can be a number or <em>in proportion to the modes</em>: the number of
+sampled modes times the samples per mode, rounded, between a minimum and a maximum.</p>
+<p>The random seed is reported and saved with the results, so an ensemble drawn with
+‘random’ can be reproduced.</p>
+</section>
 <section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -595,6 +624,7 @@ modules it is installed with, or ORCA’s MPI runtime) and on the cores the job 
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-hessian-is-computed">How the Hessian is computed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#energy-targeted-sampling">Energy-targeted sampling</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
   </nav></div>

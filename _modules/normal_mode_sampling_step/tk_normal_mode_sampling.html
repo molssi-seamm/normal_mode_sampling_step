@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>normal_mode_sampling_step.tk_normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.5 documentation</title>
+    <title>normal_mode_sampling_step.tk_normal_mode_sampling &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.25 documentation</title>
   
   
   
@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
@@ -39,12 +39,12 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=e86bfd1c"></script>
+    <script src="../../_static/documentation_options.js?v=d2c0d6cc"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/normal_mode_sampling_step/tk_normal_mode_sampling';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.11.5" />
+  <meta name="docsearch:version" content="2026.11.25" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -579,7 +579,15 @@
         <span class="p">)</span>
 
         <span class="c1"># Comboboxes whose value changes the layout re-lay out the dialog.</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"distribution"</span><span class="p">,</span> <span class="s2">"structure configurations"</span><span class="p">,</span> <span class="s2">"system name"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="s2">"distribution"</span><span class="p">,</span>
+            <span class="s2">"structure configurations"</span><span class="p">,</span>
+            <span class="s2">"system name"</span><span class="p">,</span>
+            <span class="s2">"number of samples"</span><span class="p">,</span>
+            <span class="s2">"maximum atom displacement"</span><span class="p">,</span>
+            <span class="s2">"maximum bond change"</span><span class="p">,</span>
+            <span class="s2">"maximum angle change"</span><span class="p">,</span>
+        <span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">combobox</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;&lt;ComboboxSelected&gt;&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">combobox</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;Return&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">combobox</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;FocusOut&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
@@ -637,13 +645,36 @@
 
         <span class="c1"># Sampling.</span>
         <span class="n">add</span><span class="p">(</span><span class="s2">"number of samples"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"number of samples"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"in proportion to the modes"</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"samples per mode"</span><span class="p">)</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"minimum number of samples"</span><span class="p">)</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"maximum number of samples"</span><span class="p">)</span>
         <span class="n">add</span><span class="p">(</span><span class="s2">"distribution"</span><span class="p">)</span>
-        <span class="c1"># Temperature is meaningless for the T=0 ground-state distribution.</span>
-        <span class="k">if</span> <span class="s2">"ground"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"energy"</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
+            <span class="c1"># Energy-targeted: the target energies replace the temperature, and</span>
+            <span class="c1"># every sample's energy is set, so a ceiling would mean nothing.</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"minimum target energy"</span><span class="p">)</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"maximum target energy"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"ground"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
+            <span class="c1"># Temperature is meaningless for the T=0 ground-state distribution.</span>
             <span class="n">add</span><span class="p">(</span><span class="s2">"temperature"</span><span class="p">)</span>
         <span class="n">add</span><span class="p">(</span><span class="s2">"amplitude cap"</span><span class="p">)</span>
-        <span class="n">add</span><span class="p">(</span><span class="s2">"energy ceiling"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"energy"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"energy ceiling"</span><span class="p">)</span>
         <span class="n">add</span><span class="p">(</span><span class="s2">"modes"</span><span class="p">)</span>
+        <span class="n">add</span><span class="p">(</span><span class="s2">"lowest frequency"</span><span class="p">)</span>
+        <span class="n">add</span><span class="p">(</span><span class="s2">"maximum atom displacement"</span><span class="p">)</span>
+        <span class="n">add</span><span class="p">(</span><span class="s2">"maximum bond change"</span><span class="p">)</span>
+        <span class="n">add</span><span class="p">(</span><span class="s2">"maximum angle change"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"none"</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="s2">"maximum atom displacement"</span><span class="p">,</span>
+                <span class="s2">"maximum bond change"</span><span class="p">,</span>
+                <span class="s2">"maximum angle change"</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">"maximum draws"</span><span class="p">)</span>
         <span class="n">add</span><span class="p">(</span><span class="s2">"random seed"</span><span class="p">)</span>
 
         <span class="c1"># Output.</span>

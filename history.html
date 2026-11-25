@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.5 documentation</title>
+    <title>History &#8212; SEAMM Normal Mode Sampling Plug-in 2026.11.25 documentation</title>
   
   
   
@@ -31,7 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=c224919a" />
   
   <!-- So that users can add custom icons -->
@@ -40,12 +40,12 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=e86bfd1c"></script>
+    <script src="_static/documentation_options.js?v=d2c0d6cc"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'history';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.11.5" />
+  <meta name="docsearch:version" content="2026.11.25" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -511,6 +511,23 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.11.25 – Energy-targeted sampling, a frequency cutoff and limits on the geometry</dt><dd><ul class="simple">
+<li><p>A new distribution, ‘energy-targeted (equipartition)’, puts every sample in a
+chosen energy window whatever the size of the molecule: the classical shape (the
+same expected energy in every mode) scaled to a harmonic energy drawn uniformly
+between a minimum and a maximum. A sample keeps its target when it is redrawn,
+so the limits below do not bias the energies.</p></li>
+<li><p>Modes below a chosen frequency can be left out, for example soft torsions that
+a torsion scan covers better.</p></li>
+<li><p>Limits on how far an atom may move and how much a bond length or bond angle may
+change; a sample that fails them is redrawn up to a set number of times, then
+dropped and counted.</p></li>
+<li><p>The number of samples can be in proportion to the number of modes, between a
+minimum and a maximum.</p></li>
+<li><p>The random seed is always recorded, so every ensemble can be reproduced.</p></li>
+<li><p>The dialog shows each setting only when it applies.</p></li>
+</ul>
+</dd>
 <dt>2026.11.5 – The Hessian from the shared driver, with the engine’s environment and cores</dt><dd><ul class="simple">
 <li><p>The Hessian now comes from the code the Thermochemistry and Vibrational Analysis
 steps share (seamm_exec 2026.11.5), with the same routes as before.</p></li>
