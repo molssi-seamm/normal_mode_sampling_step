@@ -1,6 +1,22 @@
 =======
 History
 =======
+2026.11.25 -- Energy-targeted sampling, a frequency cutoff and limits on the geometry
+    * A new distribution, 'energy-targeted (equipartition)', puts every sample in a
+      chosen energy window whatever the size of the molecule: the classical shape (the
+      same expected energy in every mode) scaled to a harmonic energy drawn uniformly
+      between a minimum and a maximum. A sample keeps its target when it is redrawn,
+      so the limits below do not bias the energies.
+    * Modes below a chosen frequency can be left out, for example soft torsions that
+      a torsion scan covers better.
+    * Limits on how far an atom may move and how much a bond length or bond angle may
+      change; a sample that fails them is redrawn up to a set number of times, then
+      dropped and counted.
+    * The number of samples can be in proportion to the number of modes, between a
+      minimum and a maximum.
+    * The random seed is always recorded, so every ensemble can be reproduced.
+    * The dialog shows each setting only when it applies.
+
 2026.11.5 -- The Hessian from the shared driver, with the engine's environment and cores
     * The Hessian now comes from the code the Thermochemistry and Vibrational Analysis
       steps share (seamm_exec 2026.11.5), with the same routes as before.
