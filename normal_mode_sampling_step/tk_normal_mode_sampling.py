@@ -82,7 +82,15 @@ class TkNormalModeSampling(seamm.TkNode):
         )
 
         # Comboboxes whose value changes the layout re-lay out the dialog.
-        for key in ("distribution", "structure configurations", "system name"):
+        for key in (
+            "distribution",
+            "structure configurations",
+            "system name",
+            "number of samples",
+            "maximum atom displacement",
+            "maximum bond change",
+            "maximum angle change",
+        ):
             self[key].combobox.bind("<<ComboboxSelected>>", self.reset_dialog)
             self[key].combobox.bind("<Return>", self.reset_dialog)
             self[key].combobox.bind("<FocusOut>", self.reset_dialog)
@@ -134,13 +142,36 @@ class TkNormalModeSampling(seamm.TkNode):
 
         # Sampling.
         add("number of samples")
+        if self["number of samples"].get() == "in proportion to the modes":
+            add("samples per mode")
+            add("minimum number of samples")
+            add("maximum number of samples")
         add("distribution")
-        # Temperature is meaningless for the T=0 ground-state distribution.
-        if "ground" not in distribution:
+        if "energy" in distribution:
+            # Energy-targeted: the target energies replace the temperature, and
+            # every sample's energy is set, so a ceiling would mean nothing.
+            add("minimum target energy")
+            add("maximum target energy")
+        elif "ground" not in distribution:
+            # Temperature is meaningless for the T=0 ground-state distribution.
             add("temperature")
         add("amplitude cap")
-        add("energy ceiling")
+        if "energy" not in distribution:
+            add("energy ceiling")
         add("modes")
+        add("lowest frequency")
+        add("maximum atom displacement")
+        add("maximum bond change")
+        add("maximum angle change")
+        if any(
+            self[key].get() != "none"
+            for key in (
+                "maximum atom displacement",
+                "maximum bond change",
+                "maximum angle change",
+            )
+        ):
+            add("maximum draws")
         add("random seed")
 
         # Output.

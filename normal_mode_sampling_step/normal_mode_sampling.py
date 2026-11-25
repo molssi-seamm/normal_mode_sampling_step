@@ -169,17 +169,106 @@ def _sigma_squared(omega, distribution, temperature):
     """Variance of the normal coordinate (mass-weighted, SI: kg m^2).
 
     ``omega`` is the angular frequency (1/s). ``distribution`` is one of
-    ``wigner``, ``classical``, ``ground``.
+    ``wigner``, ``classical``, ``ground`` or ``energy``. For ``energy`` (the
+    energy-targeted distribution) only the shape matters, since each draw is
+    scaled to its target energy afterwards: the classical (equipartition) shape,
+    sigma proportional to 1/omega, the same expected energy in every mode.
     """
     if distribution == "classical":
         # <Q^2> = kT / omega^2 for a unit-mass harmonic oscillator.
         return _KB_J_K * temperature / omega**2
+    if distribution == "energy":
+        return 1.0 / omega**2
     zpe_var = _HBAR_J_S / (2.0 * omega)  # ground-state (T -> 0) width
     if distribution == "ground":
         return zpe_var
     # Wigner (quantum) width at finite T.
     x = _HBAR_J_S * omega / (2.0 * _KB_J_K * temperature)
     return zpe_var / np.tanh(x)
+
+
+def _angles_of(bonds, n_atoms):
+    """The bond angles (i, j, k), j the centre, of a list of bonds (i, j)."""
+    neighbours = [set() for _ in range(n_atoms)]
+    for i, j in bonds:
+        neighbours[i].add(j)
+        neighbours[j].add(i)
+    angles = []
+    for j in range(n_atoms):
+        nb = sorted(neighbours[j])
+        for a in range(len(nb)):
+            for b in range(a + 1, len(nb)):
+                angles.append((nb[a], j, nb[b]))
+    return angles
+
+
+def _angle_deg(x, i, j, k):
+    u, v = x[i] - x[j], x[k] - x[j]
+    c = np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))
+    return np.degrees(np.arccos(np.clip(c, -1.0, 1.0)))
+
+
+def geometry_guard(
+    coords_ang,
+    bonds=(),
+    max_displacement=None,
+    max_bond_change=None,
+    max_angle_change=None,
+):
+    """A test of displaced geometries against limits on how far they move.
+
+    Parameters
+    ----------
+    coords_ang : (N, 3) array
+        The reference coordinates (Angstrom).
+    bonds : sequence of (i, j)
+        The bonds (0-based) whose lengths, and the angles between them, are
+        checked.
+    max_displacement : float or None
+        The largest distance any atom may move (Angstrom).
+    max_bond_change : float or None
+        The largest change of any bond length (Angstrom).
+    max_angle_change : float or None
+        The largest change of any bond angle (degrees).
+
+    Returns
+    -------
+    callable or None
+        ``guard(dx)`` -> None if the displacement ``dx`` (N, 3) passes, else
+        the reason, as text; None when no limit is set.
+    """
+    if (
+        max_displacement is None
+        and max_bond_change is None
+        and (max_angle_change is None)
+    ):
+        return None
+    x0 = np.asarray(coords_ang, dtype=float).reshape(-1, 3)
+    bonds = [(int(i), int(j)) for i, j in bonds]
+    r0 = {b: np.linalg.norm(x0[b[0]] - x0[b[1]]) for b in bonds}
+    angles = _angles_of(bonds, len(x0)) if max_angle_change is not None else []
+    a0 = {a: _angle_deg(x0, *a) for a in angles}
+
+    def guard(dx):
+        dx = np.asarray(dx, dtype=float).reshape(-1, 3)
+        if max_displacement is not None:
+            d = float(np.max(np.linalg.norm(dx, axis=1)))
+            if d > max_displacement:
+                return f"an atom moved {d:.3f} Å"
+        x = x0 + dx
+        if max_bond_change is not None:
+            for (i, j), r in r0.items():
+                d = abs(np.linalg.norm(x[i] - x[j]) - r)
+                if d > max_bond_change:
+                    return f"a bond changed by {d:.3f} Å"
+        if max_angle_change is not None:
+            for a, value in a0.items():
+                d = abs(_angle_deg(x, *a) - value)
+                if d > max_angle_change:
+                    return f"an angle changed by {d:.1f}°"
+        return None
+
+    return guard
 
 
 def sample_normal_modes(
@@ -192,6 +281,9 @@ def sample_normal_modes(
     temperature=300.0,
     amplitude_cap=None,
     energy_ceiling=None,
+    energy_range=None,
+    guard=None,
+    max_draws=None,
     rng=None,
     max_tries_factor=100,
 ):
@@ -206,15 +298,29 @@ def sample_normal_modes(
     masses_amu : (N,) array
         Atomic masses (amu).
     n_samples : int
-        Number of accepted geometries to return.
-    distribution : {"wigner", "classical", "ground"}
+        Number of geometries requested.
+    distribution : {"wigner", "classical", "ground", "energy"}
+        "energy" is energy-targeted sampling: the equipartition shape (sigma
+        proportional to 1/omega), each draw then scaled so that its harmonic
+        energy is a target drawn uniformly from ``energy_range``. A sample keeps
+        its target through redraws after guard failures.
     temperature : float
-        Temperature (K); ignored for the ground-state distribution.
+        Temperature (K); used only by the Wigner and classical distributions.
     amplitude_cap : float or None
-        Clamp each normal-coordinate draw to this many standard deviations.
+        Clamp each normal-coordinate draw to this many standard deviations (for
+        "energy", applied to the shape before the scaling).
     energy_ceiling : float or None
         Reject (and redraw) samples whose harmonic energy above the reference
         (kJ/mol) exceeds this.
+    energy_range : (float, float) or None
+        The range (kJ/mol) of the target energies, for "energy".
+    guard : callable or None
+        ``guard(dx)`` -> None to accept the Cartesian displacement dx (N, 3,
+        Angstrom), or the reason to redraw (see :func:`geometry_guard`).
+    max_draws : int or None
+        With a guard: the most draws for one sample. When all of them fail the
+        guard, that sample is dropped. None: redraw until accepted (bounded by
+        ``max_tries_factor``).
     rng : numpy.random.Generator or None
     max_tries_factor : int
         Safety bound on redraws (per requested sample) before giving up.
@@ -229,10 +335,21 @@ def sample_normal_modes(
         The normal-coordinate displacement per sampled mode for each accepted
         sample, in amu^1/2 Angstrom (same mode order as ``frequencies_cm``).
     n_rejected : int
-        Number of draws rejected by the energy ceiling.
+        Number of draws rejected by the energy ceiling or the guard.
+    n_dropped : int
+        Number of samples dropped because every one of their ``max_draws``
+        draws failed the guard.
     """
     if rng is None:
         rng = np.random.default_rng()
+    if distribution == "energy":
+        if energy_range is None:
+            raise ValueError("Energy-targeted sampling needs an energy range.")
+        e_low, e_high = (float(v) for v in energy_range)
+        if not 0.0 < e_low <= e_high:
+            raise ValueError(
+                f"The target energies must satisfy 0 < low <= high: {energy_range}"
+            )
 
     freqs = np.asarray(frequencies_cm, dtype=float)
     modes = np.asarray(modes_mw, dtype=float)
@@ -242,26 +359,39 @@ def sample_normal_modes(
     omega = 2.0 * np.pi * _C_CM_S * freqs  # angular frequency, 1/s
     sigma = np.sqrt(
         np.array([_sigma_squared(w, distribution, temperature) for w in omega])
-    )  # sqrt(kg) m, per mode
+    )  # sqrt(kg) m, per mode (for "energy", the shape only)
 
     inv_sqrt_m3 = 1.0 / np.sqrt(np.repeat(masses, 3) * _AMU_KG)  # 1/sqrt(kg)
+    to_kJ = _N_AVOGADRO / 1000.0  # J per molecule -> kJ/mol
 
     displacements = []
     energies_kJ = []
     q_vectors = []
     n_rejected = 0
+    n_dropped = 0
     max_tries = max(1, max_tries_factor) * max(1, n_samples)
     tries = 0
-    while len(displacements) < n_samples and tries < max_tries:
+    draws = 0  # draws for the current sample
+    while len(displacements) + n_dropped < n_samples and tries < max_tries:
         tries += 1
+        draws += 1
         q = rng.standard_normal(n_modes) * sigma  # normal coords, sqrt(kg) m
         if amplitude_cap is not None:
             q = np.clip(q, -amplitude_cap * sigma, amplitude_cap * sigma)
 
         # Harmonic energy E = 1/2 sum omega^2 q^2 (unit mass), J -> kJ/mol.
-        energy_kJ = 0.5 * np.sum(omega**2 * q**2) * _N_AVOGADRO / 1000.0
+        energy_kJ = 0.5 * np.sum(omega**2 * q**2) * to_kJ
+        if distribution == "energy":
+            # One target per sample: a redraw after a guard failure draws a new
+            # shape at the same target, so the guards do not bias the accepted
+            # energies toward the bottom of the range.
+            if draws == 1:
+                target = rng.uniform(e_low, e_high)
+            q = q * np.sqrt(target / energy_kJ)
+            energy_kJ = target
         if energy_ceiling is not None and energy_kJ > energy_ceiling:
             n_rejected += 1
+            draws = 0  # a fresh draw, with a new target
             continue
 
         # Mass-weighted Cartesian displacement, then de-weight to metres -> Ang.
@@ -269,11 +399,19 @@ def sample_normal_modes(
         dx_m = dxi * inv_sqrt_m3  # (3N,), m
         dx_ang = (dx_m / 1.0e-10).reshape(-1, 3)
 
+        if guard is not None and guard(dx_ang) is not None:
+            n_rejected += 1
+            if max_draws is not None and draws >= max_draws:
+                n_dropped += 1
+                draws = 0
+            continue
+
+        draws = 0
         displacements.append(dx_ang)
-        energies_kJ.append(energy_kJ)
+        energies_kJ.append(float(energy_kJ))
         q_vectors.append(q * _Q_SI_TO_AMU_HALF_ANG)
 
-    return displacements, energies_kJ, q_vectors, n_rejected
+    return displacements, energies_kJ, q_vectors, n_rejected, n_dropped
 
 
 def zero_point_energy(frequencies_cm):
@@ -326,19 +464,73 @@ class NormalModeSampling(seamm.Node):
 
         distribution = P["distribution"]
         n = P["number of samples"]
-        if isinstance(distribution, str) and "ground" in distribution:
-            temp = "0 K (zero-point motion only)"
+        if str(n).strip().lower() == "in proportion to the modes":
+            count = (
+                f"{P['samples per mode']} displaced geometries per sampled mode "
+                f"(at least {P['minimum number of samples']}, at most "
+                f"{P['maximum number of samples']})"
+            )
         else:
-            temp = f"{P['temperature']}"
+            count = f"{n} displaced geometr" + ("y" if str(n) == "1" else "ies")
+
+        key = self._distribution_key(distribution)
+        if key == "energy":
+            how = (
+                "with the equipartition shape, each scaled to a harmonic energy "
+                f"drawn uniformly between {P['minimum target energy']} and "
+                f"{P['maximum target energy']} above the reference"
+            )
+        elif key == "ground":
+            how = (
+                f"from the '{distribution}' normal-mode distribution at 0 K "
+                "(zero-point motion only)"
+            )
+        else:
+            how = (
+                f"from the '{distribution}' normal-mode distribution at "
+                f"{P['temperature']}"
+            )
 
         text = (
-            f"Sampling {n} displaced geometr"
-            + ("y" if str(n) == "1" else "ies")
-            + f" per reference structure from the '{distribution}' normal-mode "
-            f"distribution at {temp}, using the Hessian from the model chemistry "
-            "defined earlier in the flowchart. Translational, rotational, and "
-            "imaginary modes are excluded. The structures are written to the "
-            f"system '{P['system name']}' for downstream single-point evaluation."
+            f"Sampling {count} per reference structure {how}, using the Hessian "
+            "from the model chemistry defined earlier in the flowchart. "
+            "Translational, rotational, and imaginary modes are excluded"
+        )
+        if not self._is_none(P["lowest frequency"]):
+            text += f", as are modes below {P['lowest frequency']}"
+        text += "."
+        limits = [
+            (
+                f"no atom moves more than {P['maximum atom displacement']}"
+                if not self._is_none(P["maximum atom displacement"])
+                else None
+            ),
+            (
+                f"no bond changes by more than {P['maximum bond change']}"
+                if not self._is_none(P["maximum bond change"])
+                else None
+            ),
+            (
+                f"no bond angle changes by more than {P['maximum angle change']}"
+                if not self._is_none(P["maximum angle change"])
+                else None
+            ),
+        ]
+        limits = [x for x in limits if x is not None]
+        if limits:
+            if str(P["maximum draws"]).strip().lower() == "no limit":
+                tries = "redrawn until it passes"
+            else:
+                tries = f"redrawn up to {P['maximum draws']} times in all, then dropped"
+            text += (
+                " A sample is accepted only if "
+                + (", ".join(limits[:-1]) + " and " if len(limits) > 1 else "")
+                + limits[-1]
+                + f"; otherwise it is {tries}."
+            )
+        text += (
+            f" The structures are written to the system '{P['system name']}' for "
+            "downstream single-point evaluation."
         )
 
         return self.header + "\n" + __(text, indent=4 * " ").__str__()
@@ -357,9 +549,34 @@ class NormalModeSampling(seamm.Node):
         directory.mkdir(parents=True, exist_ok=True)
 
         system_db = self.get_variable("_system_db")
-        rng = self._make_rng(P["random seed"])
+        seed = self._seed_of(P["random seed"])
+        rng = np.random.default_rng(seed)
 
         distribution = self._distribution_key(P["distribution"])
+        energy_range = None
+        if distribution == "energy":
+            energy_range = (
+                self._as_float(P["minimum target energy"], "kJ/mol"),
+                self._as_float(P["maximum target energy"], "kJ/mol"),
+            )
+        lowest = (
+            None
+            if self._is_none(P["lowest frequency"])
+            else self._as_float(P["lowest frequency"], "1/cm")
+        )
+        limits = {
+            key: (None if self._is_none(P[key]) else self._as_float(P[key], units))
+            for key, units in (
+                ("maximum atom displacement", "Å"),
+                ("maximum bond change", "Å"),
+                ("maximum angle change", "degree"),
+            )
+        }
+        max_draws = (
+            None
+            if str(P["maximum draws"]).strip().lower() == "no limit"
+            else int(P["maximum draws"])
+        )
         temperature = self._as_float(P["temperature"], "K")
         cap = None if self._is_none(P["amplitude cap"]) else float(P["amplitude cap"])
         ceiling = (
@@ -367,6 +584,17 @@ class NormalModeSampling(seamm.Node):
             if self._is_none(P["energy ceiling"])
             else self._as_float(P["energy ceiling"], "kJ/mol")
         )
+        if distribution == "energy" and ceiling is not None:
+            # The targets set every sample's energy, so a ceiling has no meaning;
+            # the GUI hides it, but a hand-edited flowchart may still carry one.
+            printer.important(
+                __(
+                    "The energy ceiling is ignored for energy-targeted sampling: "
+                    "the target energies set each sample's energy.",
+                    indent=4 * " ",
+                )
+            )
+            ceiling = None
 
         references = self._reference_pool(P, system_db)
         if len(references) == 0:
@@ -381,6 +609,7 @@ class NormalModeSampling(seamm.Node):
 
         total = 0
         n_rejected_total = 0
+        n_dropped_total = 0
         first_freqs = None
         first_zpe = None
         first_counts = None
@@ -416,6 +645,8 @@ class NormalModeSampling(seamm.Node):
             vib_modes = modes_mw[:, vibrational]
 
             keep = self._parse_mode_selection(P["modes"], vib_freqs.size)
+            if lowest is not None:
+                keep &= vib_freqs >= lowest
             sel_freqs = vib_freqs[keep]
             sel_modes = vib_modes[:, keep]
             if sel_freqs.size == 0:
@@ -424,18 +655,38 @@ class NormalModeSampling(seamm.Node):
                     "after applying the mode selection."
                 )
 
-            displacements, energies, q_vectors, n_rejected = sample_normal_modes(
+            guard = None
+            if any(v is not None for v in limits.values()):
+                guard = geometry_guard(
+                    coords,
+                    self._bonds_of(reference),
+                    max_displacement=limits["maximum atom displacement"],
+                    max_bond_change=limits["maximum bond change"],
+                    max_angle_change=limits["maximum angle change"],
+                )
+
+            (
+                displacements,
+                energies,
+                q_vectors,
+                n_rejected,
+                n_dropped,
+            ) = sample_normal_modes(
                 sel_freqs,
                 sel_modes,
                 masses,
-                int(P["number of samples"]),
+                self._number_of_samples(P, sel_freqs.size),
                 distribution=distribution,
                 temperature=temperature,
                 amplitude_cap=cap,
                 energy_ceiling=ceiling,
+                energy_range=energy_range,
+                guard=guard,
+                max_draws=max_draws,
                 rng=rng,
             )
             n_rejected_total += n_rejected
+            n_dropped_total += n_dropped
             energies_all.extend(energies)
 
             for i, dx in enumerate(displacements):
@@ -474,7 +725,7 @@ class NormalModeSampling(seamm.Node):
 
         # Cite the method. The plug-in's own reference is added by the base class,
         # which has already loaded data/references.bib into self._bibliography.
-        if "wigner1932" in self._bibliography:
+        if distribution in ("wigner", "ground") and "wigner1932" in self._bibliography:
             self.references.cite(
                 raw=self._bibliography["wigner1932"],
                 alias="wigner1932",
@@ -487,6 +738,8 @@ class NormalModeSampling(seamm.Node):
         data = {
             "number of samples": total,
             "number of rejected samples": n_rejected_total,
+            "number of dropped samples": n_dropped_total,
+            "random seed": seed,
         }
         if first_freqs is not None:
             data["frequencies"] = [float(v) for v in first_freqs]
@@ -599,6 +852,53 @@ class NormalModeSampling(seamm.Node):
             properties.add(name, _type, units=units, noerror=True)
         properties.put(name, value)
 
+    @staticmethod
+    def _seed_of(seed):
+        """The integer seed: the given one, or a fresh one for 'random', so that
+        the ensemble can be reproduced from the recorded seed."""
+        if isinstance(seed, str):
+            if seed.strip() == "" or seed.strip().lower() == "random":
+                return int(np.random.SeedSequence().entropy % 2**63)
+            seed = int(seed)
+        return int(seed)
+
+    @staticmethod
+    def _number_of_samples(P, n_modes):
+        """The number of samples for a reference with n_modes sampled modes."""
+        n = P["number of samples"]
+        if str(n).strip().lower() != "in proportion to the modes":
+            return int(n)
+        wanted = int(np.floor(float(P["samples per mode"]) * n_modes + 0.5))
+        low, high = int(P["minimum number of samples"]), int(
+            P["maximum number of samples"]
+        )
+        return max(low, min(high, wanted))
+
+    @staticmethod
+    def _bonds_of(configuration):
+        """The bonds (0-based index pairs) of a configuration: its bond table,
+        or, when it has none, bonds perceived from the distances (covalent
+        radii x 1.3, RDKit's radii)."""
+        ids = list(configuration.atoms.ids)
+        index = {aid: k for k, aid in enumerate(ids)}
+        if configuration.bonds.n_bonds > 0:
+            data = configuration.bonds.get_as_dict()
+            return [(index[i], index[j]) for i, j in zip(data["i"], data["j"])]
+        from rdkit import Chem
+
+        table = Chem.GetPeriodicTable()
+        symbols = list(configuration.atoms.symbols)
+        radii = np.array([table.GetRcovalent(s) for s in symbols])
+        x = np.asarray(
+            configuration.atoms.get_coordinates(fractionals=False), dtype=float
+        )
+        bonds = []
+        for i in range(len(symbols)):
+            d = np.linalg.norm(x[i + 1 :] - x[i], axis=1)
+            for k in np.nonzero(d < 1.3 * (radii[i + 1 :] + radii[i]))[0]:
+                bonds.append((i, i + 1 + int(k)))
+        return bonds
+
     def _make_rng(self, seed):
         if isinstance(seed, str):
             if seed.strip() == "" or seed.strip().lower() == "random":
@@ -609,6 +909,8 @@ class NormalModeSampling(seamm.Node):
     @staticmethod
     def _distribution_key(value):
         v = str(value).lower()
+        if "energy" in v:
+            return "energy"
         if "classical" in v:
             return "classical"
         if "ground" in v:
@@ -677,10 +979,20 @@ class NormalModeSampling(seamm.Node):
                 f"(maximum {data['maximum harmonic energy']:.1f} kJ/mol)"
                 + (
                     f"; {data['number of rejected samples']} draws were rejected "
-                    "by the energy ceiling."
+                    "by the energy ceiling or the limits on the geometry."
                     if data.get("number of rejected samples")
                     else "."
                 )
             )
             printer.important(__(text, indent=4 * " "))
+        if data.get("number of dropped samples"):
+            text = (
+                f"{data['number of dropped samples']} samples were dropped because "
+                "every draw moved the structure more than the limits allow."
+            )
+            printer.important(__(text, indent=4 * " "))
+        if "random seed" in data:
+            printer.important(
+                __(f"The random seed was {data['random seed']}.", indent=4 * " ")
+            )
         printer.important("")

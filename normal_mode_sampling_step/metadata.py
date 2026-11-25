@@ -84,7 +84,23 @@ metadata["results"] = {
         "format": ".3f",
     },
     "number of rejected samples": {
-        "description": ("Number of draws rejected by the energy ceiling and redrawn"),
+        "description": (
+            "Number of draws rejected by the energy ceiling or the limits on the "
+            "geometry, and redrawn"
+        ),
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "number of dropped samples": {
+        "description": (
+            "Number of samples dropped because every allowed draw failed the "
+            "limits on the geometry"
+        ),
+        "dimensionality": "scalar",
+        "type": "integer",
+    },
+    "random seed": {
+        "description": "The seed of the random numbers, to reproduce the samples",
         "dimensionality": "scalar",
         "type": "integer",
     },
