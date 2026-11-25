@@ -166,7 +166,7 @@ def test_sampling_width_matches_sigma(distribution):
     vib, vmodes = freqs[mask], modes[:, mask]
 
     rng = np.random.default_rng(12345)
-    disp, energies, q_vectors, n_rej = nms.sample_normal_modes(
+    disp, energies, q_vectors, n_rej, _ = nms.sample_normal_modes(
         vib,
         vmodes,
         masses,
@@ -202,7 +202,7 @@ def test_amplitude_cap_clips_draws():
     vib, vmodes = freqs[mask], modes[:, mask]
 
     rng = np.random.default_rng(7)
-    disp, _, _, _ = nms.sample_normal_modes(
+    disp, _, _, _, _ = nms.sample_normal_modes(
         vib, vmodes, masses, 20000, distribution="wigner", amplitude_cap=1.0, rng=rng
     )
     q = recover_normal_coordinate(disp, vmodes[:, 0], masses)
@@ -219,7 +219,7 @@ def test_energy_ceiling_rejects_and_bounds_energy():
 
     ceiling = 10.0  # kJ/mol; mean ground-state harmonic energy is ~15 kJ/mol here
     rng = np.random.default_rng(3)
-    disp, energies, _, n_rej = nms.sample_normal_modes(
+    disp, energies, _, n_rej, _ = nms.sample_normal_modes(
         vib,
         vmodes,
         masses,
@@ -239,10 +239,10 @@ def test_sampling_is_reproducible_with_seed():
     mask = freqs > nms.ZERO_MODE_THRESHOLD_CM
     vib, vmodes = freqs[mask], modes[:, mask]
 
-    a, _, _, _ = nms.sample_normal_modes(
+    a, _, _, _, _ = nms.sample_normal_modes(
         vib, vmodes, masses, 10, rng=np.random.default_rng(99)
     )
-    b, _, _, _ = nms.sample_normal_modes(
+    b, _, _, _, _ = nms.sample_normal_modes(
         vib, vmodes, masses, 10, rng=np.random.default_rng(99)
     )
     for da, db in zip(a, b):

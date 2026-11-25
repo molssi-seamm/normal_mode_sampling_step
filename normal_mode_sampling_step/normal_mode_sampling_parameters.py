@@ -85,12 +85,45 @@ class NormalModeSamplingParameters(seamm.Parameters):
             "default": 20,
             "kind": "integer",
             "default_units": "",
-            "enumeration": tuple(),
+            "enumeration": ("in proportion to the modes",),
             "format_string": "",
             "description": "Number of samples:",
             "help_text": (
-                "How many displaced geometries to generate per reference " "structure."
+                "How many displaced geometries to generate per reference "
+                "structure: a number, or 'in proportion to the modes' for the "
+                "number of sampled modes times 'samples per mode', kept between "
+                "the minimum and maximum below."
             ),
+        },
+        "samples per mode": {
+            "default": 0.5,
+            "kind": "float",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": ".2f",
+            "description": "Samples per mode:",
+            "help_text": (
+                "With 'in proportion to the modes': the number of samples per "
+                "sampled vibrational mode, rounded."
+            ),
+        },
+        "minimum number of samples": {
+            "default": 10,
+            "kind": "integer",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "At least:",
+            "help_text": "With 'in proportion to the modes': the fewest samples.",
+        },
+        "maximum number of samples": {
+            "default": 40,
+            "kind": "integer",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "At most:",
+            "help_text": "With 'in proportion to the modes': the most samples.",
         },
         "distribution": {
             "default": "Wigner (quantum)",
@@ -100,6 +133,7 @@ class NormalModeSamplingParameters(seamm.Parameters):
                 "Wigner (quantum)",
                 "classical (thermal)",
                 "ground state (0 K)",
+                "energy-targeted (equipartition)",
             ),
             "format_string": "",
             "description": "Amplitude distribution:",
@@ -110,7 +144,37 @@ class NormalModeSamplingParameters(seamm.Parameters):
                 "the zero-point spread of stiff modes that classical sampling "
                 "misses. 'classical (thermal)' uses the Boltzmann width "
                 "sigma^2 = kT / omega^2. 'ground state (0 K)' is the Wigner "
-                "distribution at T=0, i.e. pure zero-point motion."
+                "distribution at T=0, i.e. pure zero-point motion. "
+                "'energy-targeted (equipartition)' draws the classical shape "
+                "(the same expected energy in every mode, sigma proportional to "
+                "1/omega) and scales each draw so that its harmonic energy is a "
+                "target drawn uniformly between the minimum and maximum target "
+                "energies: every sample lies in a chosen energy window, whatever "
+                "the size of the molecule, and no temperature enters."
+            ),
+        },
+        "minimum target energy": {
+            "default": 0.5,
+            "kind": "float",
+            "default_units": "kcal/mol",
+            "enumeration": tuple(),
+            "format_string": ".2f",
+            "description": "Target energies from:",
+            "help_text": (
+                "For energy-targeted sampling: the lowest harmonic energy above "
+                "the reference that a sample is scaled to."
+            ),
+        },
+        "maximum target energy": {
+            "default": 9.0,
+            "kind": "float",
+            "default_units": "kcal/mol",
+            "enumeration": tuple(),
+            "format_string": ".2f",
+            "description": "to:",
+            "help_text": (
+                "For energy-targeted sampling: the highest harmonic energy above "
+                "the reference that a sample is scaled to."
             ),
         },
         "temperature": {
@@ -163,6 +227,70 @@ class NormalModeSamplingParameters(seamm.Parameters):
                 "(e.g. '1-3, 7'). Translational, rotational, and imaginary modes "
                 "are always excluded, so a transition state is sampled along its "
                 "real modes with the reaction coordinate left alone."
+            ),
+        },
+        "lowest frequency": {
+            "default": "none",
+            "kind": "float",
+            "default_units": "1/cm",
+            "enumeration": ("none",),
+            "format_string": ".1f",
+            "description": "Skip modes below:",
+            "help_text": (
+                "Do not displace along vibrational modes with a lower frequency "
+                "than this, e.g. 100 cm^-1 to leave soft torsions and other "
+                "large-amplitude motions to a torsion scan. 'none' samples every "
+                "selected mode."
+            ),
+        },
+        "maximum atom displacement": {
+            "default": "none",
+            "kind": "float",
+            "default_units": "Å",
+            "enumeration": ("none",),
+            "format_string": ".3f",
+            "description": "Largest atom displacement:",
+            "help_text": (
+                "Redraw a sample in which any atom moves farther than this from "
+                "the reference. 'none' sets no limit."
+            ),
+        },
+        "maximum bond change": {
+            "default": "none",
+            "kind": "float",
+            "default_units": "Å",
+            "enumeration": ("none",),
+            "format_string": ".3f",
+            "description": "Largest bond-length change:",
+            "help_text": (
+                "Redraw a sample in which any bond length changes by more than "
+                "this. The bonds are the reference's (perceived from the "
+                "distances when it has none). 'none' sets no limit."
+            ),
+        },
+        "maximum angle change": {
+            "default": "none",
+            "kind": "float",
+            "default_units": "degree",
+            "enumeration": ("none",),
+            "format_string": ".1f",
+            "description": "Largest bond-angle change:",
+            "help_text": (
+                "Redraw a sample in which any angle between two bonds changes by "
+                "more than this. 'none' sets no limit."
+            ),
+        },
+        "maximum draws": {
+            "default": 5,
+            "kind": "integer",
+            "default_units": "",
+            "enumeration": ("no limit",),
+            "format_string": "",
+            "description": "Draws per sample:",
+            "help_text": (
+                "With any of the limits above: how many times a sample is drawn "
+                "before it is dropped (and counted as dropped). 'no limit' "
+                "redraws until a sample passes."
             ),
         },
         "random seed": {

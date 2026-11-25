@@ -45,6 +45,40 @@ modules it is installed with, or ORCA's MPI runtime) and on the cores the job ha
 
 For HF/def2-SVP water the analytic and finite-difference Hessians agree to better than 1 cm⁻¹ in the frequencies.
 
+Energy-targeted sampling
+========================
+
+Thermal and Wigner sampling put each sample's energy where the temperature (or the
+zero-point motion) puts it, and that grows with the size of the molecule: a Wigner
+sample's mean harmonic energy is about half the zero-point energy, some 14 kcal/mol
+for methane and 35 kcal/mol for a 19-atom organic molecule. For training data in a
+chosen energy window, use the **energy-targeted (equipartition)** distribution:
+
+1. The shape of each sample is drawn from the classical distribution, which gives every
+   mode the same expected energy (the normal-coordinate width is proportional to
+   1/ω), capped at the amplitude cap.
+2. A target energy E* is drawn uniformly between the **minimum** and **maximum target
+   energy**.
+3. The displacement is scaled so that its harmonic energy, ½ Σ ω² Q², is exactly E*.
+
+No temperature enters. The energy ceiling does not apply, since every sample's energy is
+set.
+
+**Skip modes below** leaves out the soft modes, whose large amplitudes are better
+covered by a torsion scan (100 cm⁻¹ is a common choice).
+
+**Limits on the geometry.** A sample in which an atom moves farther than the largest
+atom displacement, or a bond length or a bond angle changes by more than its limit, is
+drawn again, keeping its target energy so that the limits do not bias the energies.
+After the given number of draws it is dropped, and the output reports how many were.
+The bonds are the structure's own, or perceived from the distances when it has none.
+
+**Number of samples** can be a number or *in proportion to the modes*: the number of
+sampled modes times the samples per mode, rounded, between a minimum and a maximum.
+
+The random seed is reported and saved with the results, so an ensemble drawn with
+'random' can be reproduced.
+
 Indices and tables
 ==================
 
